@@ -1,6 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'home.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'home.dart';
+import 'registerView.dart';
 
 class loginView extends StatefulWidget {
   @override
@@ -59,7 +62,7 @@ class _loginView extends State<loginView> {
                             suffixIcon: Icon(
                               Icons.account_circle,
                               size: 30.0,
-                              color: Colors.black,
+                              color: const Color.fromARGB(255, 190, 190, 190),
                             ),
                           ),
                         ),
@@ -90,7 +93,7 @@ class _loginView extends State<loginView> {
                                     ? Icons.visibility_off
                                     : Icons.visibility,
                                 size: 30.0,
-                                color: Colors.black,
+                                color: const Color.fromARGB(255, 190, 190, 190),
                               ),
                               onPressed: () {
                                 setState(() {
@@ -137,8 +140,39 @@ class _loginView extends State<loginView> {
                   ),
                 ),
               ),
-              Text(
-                'Don’t have an account? Swipe right to create a new account.'
+              SizedBox(
+                height: 20.0,
+              ),
+              RichText(
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context).style,
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: 'Don’t have an account? Swipe right to',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
+                    ),
+                    TextSpan(
+                      text: ' create a new account.',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 255, 92, 92),
+                        decoration: TextDecoration.underline,
+                        fontSize: 20,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => _registerView(),
+                            ),
+                          );
+                        },
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -152,5 +186,12 @@ class _home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Home();
+  }
+}
+
+class _registerView extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return registerView();
   }
 }
