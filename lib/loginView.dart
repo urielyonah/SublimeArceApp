@@ -24,7 +24,7 @@ class _loginView extends State<loginView> {
       child: Column(
         children: <Widget>[
           Text(
-            'Login',
+            'Prueba',
             style: TextStyle(
               fontSize: 24.0,
               fontWeight: FontWeight.bold,
