@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 //import 'dart:async';
 
 class productsView extends StatelessWidget {
+  static String tag = "productsView";
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

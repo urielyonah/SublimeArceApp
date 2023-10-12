@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-
-class homeView extends StatefulWidget  {
+class homeView extends StatefulWidget {
+  static String tag = "homeView";
   @override
   _HomeViewState createState() => _HomeViewState();
 }
@@ -15,7 +15,6 @@ class _HomeViewState extends State<homeView> {
     'assets/imagen2.jpg',
     'assets/imagen3.jpg',
   ];
-
   @override
   void initState() {
     super.initState();
@@ -49,13 +48,15 @@ class _HomeViewState extends State<homeView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('SublimeArce'), // Reemplaza con el nombre de tu empresa
-        backgroundColor: Colors.blue, // Personaliza el color de acuerdo a tu empresa
+        backgroundColor:
+            Colors.blue, // Personaliza el color de acuerdo a tu empresa
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            height: 200, // Ajusta la altura del Slider de imágenes según tus necesidades
+            height:
+                200, // Ajusta la altura del Slider de imágenes según tus necesidades
             child: PageView.builder(
               controller: _pageController,
               itemCount: _imagePaths.length,

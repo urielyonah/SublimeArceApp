@@ -5,24 +5,26 @@ import 'productsView.dart';
 //import 'loginView.dart'; // Importa la vista de inicio de sesión
 
 class Home extends StatefulWidget {
+  static String tag = "home";
+  @override
   State<StatefulWidget> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
-Widget _getSelectedWidget(int index) {
-  switch (index) {
-    case 0:
-      return _homeView();
-    case 1:
-      return _productsView();
-    case 2:
-      return _desingView();
-    default:
-      return Text('Página no encontrada');
+  Widget _getSelectedWidget(int index) {
+    switch (index) {
+      case 0:
+        return _homeView();
+      case 1:
+        return _productsView();
+      case 2:
+        return _desingView();
+      default:
+        return Text('Página no encontrada');
+    }
   }
-}
 
   void _onItemTapped(int index) {
     setState(() {
@@ -59,25 +61,23 @@ Widget _getSelectedWidget(int index) {
   }
 }
 
-class _homeView  extends StatelessWidget {
+class _homeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return homeView();
   }
 }
 
-class _productsView  extends StatelessWidget {
+class _productsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return productsView();
   }
 }
 
-class _desingView  extends StatelessWidget {
+class _desingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return desingView();
   }
 }
-
-
