@@ -50,6 +50,9 @@ class _loginView extends State<loginView> {
           ),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
+              borderSide: const BorderSide(color: Colors.purple, width: 4)),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
               borderSide: const BorderSide(color: Colors.purple, width: 4))),
     );
 
@@ -81,6 +84,9 @@ class _loginView extends State<loginView> {
           ),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
+              borderSide: const BorderSide(color: Colors.purple, width: 4)),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
               borderSide: const BorderSide(color: Colors.purple, width: 4))),
     );
 
@@ -109,7 +115,7 @@ class _loginView extends State<loginView> {
           TextSpan(
             text: 'Don’t have an account? Swipe right to',
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 20,
             ),
           ),
