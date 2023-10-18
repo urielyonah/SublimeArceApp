@@ -1,10 +1,10 @@
-import 'package:ejercicio1/desingView.dart';
-import 'package:ejercicio1/homeView.dart';
-import 'package:ejercicio1/productsView.dart';
-import 'package:ejercicio1/registerView.dart';
+import 'package:ejercicio1/vistas/desingView.dart';
+import 'package:ejercicio1/vistas/homeView.dart';
+import 'package:ejercicio1/vistas/productsView.dart';
+import 'package:ejercicio1/vistas/registerView.dart';
 import 'package:flutter/material.dart';
 import 'home.dart';
-import 'loginView.dart';
+import 'vistas/loginView.dart';
 
 void main() => runApp(App());
 
