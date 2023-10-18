@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'loginView.dart';
 
 void main() {
+  FlutterError.onError = (details) {
+    FlutterError.dumpErrorToConsole(details);
+  };
   //debugEmulateFlutterTesterEnvironment = true;
   runApp(App());
   } 

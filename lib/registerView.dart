@@ -1,5 +1,7 @@
+import 'package:ejercicio1/list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 
 class registerView extends StatefulWidget {
   @override
@@ -18,7 +20,6 @@ class _registerView extends State<registerView> {
     // Obtener los valores ingresados por el usuario
     String? email = loginData['Email'];
     String? password = loginData['Contrasena'];
-
     // Aquí puedes realizar las acciones necesarias para registrar al usuario
     // Por ejemplo, puedes enviar estos valores a un servidor o guardarlos localmente.
 
@@ -176,7 +177,12 @@ class _registerView extends State<registerView> {
                     ),
                   ),
                   onPressed: () {
-                    register();
+                    Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => _listpage(),
+                            ),
+                          );
                   },
                   child: Text(
                     'Register',
@@ -196,5 +202,12 @@ class _registerView extends State<registerView> {
         ),
       ),
     );
+  }
+}
+
+class _listpage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return listpage();
   }
 }
