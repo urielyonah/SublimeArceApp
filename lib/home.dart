@@ -1,3 +1,5 @@
+import 'package:ejercicio1/vistas/cartView.dart';
+
 import 'drawer.dart';
 import 'package:flutter/material.dart';
 import 'routes.dart';
@@ -64,7 +66,14 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.shopping_cart))
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => cartView()),
+                );
+              },
+              icon: Icon(Icons.shopping_cart))
         ],
         title: Text('SublimArce'),
         centerTitle: true,
