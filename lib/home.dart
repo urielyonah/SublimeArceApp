@@ -35,11 +35,13 @@ class _homeState extends State<home> {
   }
 }
 
-void main() => runApp(const Home());
-
 class Home extends StatefulWidget {
   static String tag = "Home";
-  const Home({super.key});
+  final String userName;
+  final String userEmail;
+
+  const Home({Key? key, required this.userName, required this.userEmail})
+      : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -48,6 +50,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int index = 0;
   home? myBNB;
+  
+  
   @override
   void initState() {
     myBNB = home(currentIndex: (i) {
@@ -71,7 +75,7 @@ class _HomeState extends State<Home> {
         backgroundColor:
             Colors.blue, // Personaliza el color de acuerdo a tu empresa
       ),
-      drawer: drawer(),
+      drawer: drawer(userName: widget.userName, userEmail: widget.userEmail),
       bottomNavigationBar: myBNB,
       body: Routes(index: index),
     );

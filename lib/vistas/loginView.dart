@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-//import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../home.dart';
 import 'registerView.dart';
@@ -13,10 +15,57 @@ class loginView extends StatefulWidget {
 
 class _loginView extends State<loginView> {
   bool showPassword = false;
-  Map<String, String> loginData = {
-    'Email': '',
-    'Contrasena': '',
-  };
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  String userName = ''; // Variable para almacenar el nombre del usuario
+  String userEmail =
+      ''; // Variable para almacenar el correo electrónico del usuario
+  //drawer(userName: userName, userEmail: userEmail);
+
+  Future<void> loginUser() async {
+    final String url = 'http://192.168.0.106:8080/api_app/login.php';
+
+    final response = await http.post(
+      Uri.parse(url),
+      body: {
+        'Email': emailController.text,
+        'Contrasena': passwordController.text,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic data = jsonDecode(response.body);
+      //print(response.body);
+      final user = data['user'];
+      // Imprime las credenciales ingresadas y los valores del servidor
+      //print('Credenciales ingresadas - Email: ${emailController.text}, Contraseña: ${passwordController.text}');
+      //print('Valores del servidor - Email: ${user['CORREO']}, Contraseña: ${user['CONTRASEÑA']}');
+
+      if (user['CORREO'].toLowerCase() == emailController.text.toLowerCase() &&
+          user['CONTRASE\u00d1A'] == passwordController.text) {
+        // Datos coinciden, navega a Home
+        userName = user['NOMBRE'];
+        userEmail = user['CORREO'];
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userName', userName);
+        await prefs.setString('userEmail', userEmail);
+        //print(userName);
+        //print(userEmail);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) =>
+                Home(userName: userName, userEmail: userEmail),
+          ),
+        );
+      } else {
+        print("Credenciales incorrectas");
+      }
+    } else {
+      print(
+          "Error de conexión: ${response.statusCode} - ${response.reasonPhrase}");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +79,12 @@ class _loginView extends State<loginView> {
     );
 
     final email = TextFormField(
+      controller: emailController,
       style: const TextStyle(
         color: Colors.black,
       ),
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
-      initialValue: '',
       decoration: InputDecoration(
           fillColor: Colors.white,
           filled: true,
@@ -57,11 +106,11 @@ class _loginView extends State<loginView> {
     );
 
     final password = TextFormField(
+      controller: passwordController,
       style: const TextStyle(
         color: Colors.black,
       ),
       autofocus: false,
-      initialValue: '',
       obscureText: !showPassword,
       decoration: InputDecoration(
           fillColor: Colors.white,
@@ -96,9 +145,7 @@ class _loginView extends State<loginView> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        onPressed: () {
-          Navigator.of(context).pushNamed(Home.tag);
-        },
+        onPressed: loginUser,
         padding: EdgeInsets.all(12),
         color: Color.fromARGB(255, 219, 36, 176),
         child: Text(
@@ -163,19 +210,5 @@ class _loginView extends State<loginView> {
         ),
       ),
     );
-  }
-}
-
-class _home extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Home();
-  }
-}
-
-class _registerView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return registerView();
   }
 }

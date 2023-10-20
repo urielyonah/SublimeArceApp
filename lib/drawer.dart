@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 
 class drawer extends StatelessWidget {
   static String tag = 'drawer';
+  final String userName;
+  final String userEmail;
+
+  drawer({required this.userName, required this.userEmail});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -14,8 +19,8 @@ class drawer extends StatelessWidget {
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
-            accountName: const Text("Usuario"),
-            accountEmail: const Text("user@gmail.com"),
+            accountName:  Text(userName),
+            accountEmail:  Text(userEmail),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.network(

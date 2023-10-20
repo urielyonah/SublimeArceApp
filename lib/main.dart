@@ -3,21 +3,36 @@ import 'package:ejercicio1/vistas/homeView.dart';
 import 'package:ejercicio1/vistas/productsView.dart';
 import 'package:ejercicio1/vistas/registerView.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
 import 'vistas/loginView.dart';
 
-void main() => runApp(App());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Asegura que Flutter se inicialice
 
+  final prefs = await SharedPreferences.getInstance();
+  final userName = prefs.getString('userName') ?? '';
+  final userEmail = prefs.getString('userEmail') ?? '';
+
+  runApp(App(userName: userName, userEmail: userEmail));
+}
 
 class App extends StatelessWidget {
-  final routes = <String, WidgetBuilder>{
-    loginView.tag: (context) => loginView(),
-    homeView.tag: (context) => homeView(),
-    Home.tag: (context) => Home(),
-    registerView.tag: (context) => registerView(),
-    desingView.tag: (context) => desingView(),
-    productsView.tag: (context) => productsView(),
-  };
+  final String userName;
+  final String userEmail;
+
+  App({required this.userName, required this.userEmail});
+
+  Map<String, WidgetBuilder> _buildRoutes() {
+    return {
+      loginView.tag: (context) => loginView(),
+      homeView.tag: (context) => homeView(),
+      'home': (context) => Home(userName: userName, userEmail: userEmail),
+      registerView.tag: (context) => registerView(),
+      desingView.tag: (context) => desingView(),
+      productsView.tag: (context) => productsView(),
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +40,7 @@ class App extends StatelessWidget {
       title: 'SublimeArce',
       debugShowCheckedModeBanner: false,
       home: loginView(),
-      routes: routes,
+      routes: _buildRoutes(),
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
