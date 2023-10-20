@@ -10,6 +10,13 @@ class cartView extends StatefulWidget {
 class _cartViewState extends State<cartView> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: ElevatedButton(
+        onPressed: () {
+          // Lógica de tu botón
+        },
+        child: Text("Presionar"),
+      ),
+    );
   }
 }
