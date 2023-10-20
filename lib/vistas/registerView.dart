@@ -1,21 +1,33 @@
-import 'package:flutter/gestures.dart';
+import 'package:ejercicio1/list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'home.dart';
-import 'registerView.dart';
 
-class loginView extends StatefulWidget {
+class registerView extends StatefulWidget {
+  static String tag = "registerView";
   @override
-  _loginView createState() => _loginView();
+  _registerView createState() => _registerView();
 }
 
-class _loginView extends State<loginView> {
+class _registerView extends State<registerView> {
   bool showPassword = false;
+  bool showPassword2 = false;
   Map<String, String> loginData = {
     'Email': '',
     'Contrasena': '',
   };
+
+  void register() {
+    // Obtener los valores ingresados por el usuario
+    String? email = loginData['Email'];
+    String? password = loginData['Contrasena'];
+    // Aquí puedes realizar las acciones necesarias para registrar al usuario
+    // Por ejemplo, puedes enviar estos valores a un servidor o guardarlos localmente.
+
+    // Imprimir los valores para verificar que se han almacenado correctamente
+    print('Email: $email');
+    print('Contraseña: $password');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +39,7 @@ class _loginView extends State<loginView> {
           child: Column(
             children: <Widget>[
               Text(
-                'Login',
+                'Register',
                 style: TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
@@ -48,7 +60,7 @@ class _loginView extends State<loginView> {
                         Padding(
                           padding: EdgeInsets.all(5.0),
                           child: Text(
-                            'USERNAME / EMAIL',
+                            'EMAIL',
                             style: TextStyle(
                               color: Color(0xFF707070),
                               fontWeight: FontWeight.bold,
@@ -57,6 +69,11 @@ class _loginView extends State<loginView> {
                         ),
                         TextFormField(
                           style: TextStyle(color: Colors.black),
+                          onChanged: (value) {
+                            setState(() {
+                              loginData['Email'] = value;
+                            });
+                          },
                           decoration: InputDecoration(
                             hintText: "Ingrese su correo",
                             suffixIcon: Icon(
@@ -85,6 +102,11 @@ class _loginView extends State<loginView> {
                         TextFormField(
                           style: TextStyle(color: Colors.black),
                           obscureText: !showPassword,
+                          onChanged: (value) {
+                            setState(() {
+                              loginData['Contrasena'] = value;
+                            });
+                          },
                           decoration: InputDecoration(
                             hintText: "Ingrese su contraseña",
                             suffixIcon: IconButton(
@@ -98,6 +120,42 @@ class _loginView extends State<loginView> {
                               onPressed: () {
                                 setState(() {
                                   showPassword = !showPassword;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: Text(
+                            'CONFIRM PASSWORD',
+                            style: TextStyle(
+                              color: Color(0xFF707070),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        TextFormField(
+                          style: TextStyle(color: Colors.black),
+                          obscureText: !showPassword2,
+                          decoration: InputDecoration(
+                            hintText: "Ingrese su contraseña",
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                showPassword2
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                size: 30.0,
+                                color: const Color.fromARGB(255, 190, 190, 190),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  showPassword2 = !showPassword2;
                                 });
                               },
                             ),
@@ -120,15 +178,15 @@ class _loginView extends State<loginView> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => _home(),
-                      ),
-                    );
+                    Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => _listpage(),
+                            ),
+                          );
                   },
                   child: Text(
-                    'LOG IN',
+                    'Register',
                     style: GoogleFonts.getFont(
                       'Lato',
                       textStyle: TextStyle(
@@ -140,40 +198,6 @@ class _loginView extends State<loginView> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 20.0,
-              ),
-              RichText(
-                text: TextSpan(
-                  style: DefaultTextStyle.of(context).style,
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: 'Don’t have an account? Swipe right to',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                      ),
-                    ),
-                    TextSpan(
-                      text: ' create a new account.',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 255, 92, 92),
-                        decoration: TextDecoration.underline,
-                        fontSize: 20,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => _registerView(),
-                            ),
-                          );
-                        },
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         ),
@@ -182,16 +206,9 @@ class _loginView extends State<loginView> {
   }
 }
 
-class _home extends StatelessWidget {
+class _listpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Home();
-  }
-}
-
-class _registerView extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-    return registerView();
+    return listpage();
   }
 }
