@@ -36,7 +36,7 @@ class _listpage extends State<listpage> {
   }
 
   Future<void> getUsers() async {
-    final url = 'http://192.168.0.106:8080/api_app/getClientes.php';
+    final url = 'https://apisublimarce.onrender.com/getclientes';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
 

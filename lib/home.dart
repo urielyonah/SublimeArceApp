@@ -52,8 +52,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int index = 0;
   home? myBNB;
-  
-  
+
   @override
   void initState() {
     myBNB = home(currentIndex: (i) {
@@ -74,7 +73,7 @@ class _HomeState extends State<Home> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => cartView()),
+                  MaterialPageRoute(builder: (context) => CartView()),
                 );
               },
               icon: Icon(Icons.shopping_cart))
