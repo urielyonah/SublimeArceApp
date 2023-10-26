@@ -30,7 +30,7 @@ class productsView extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => cartView()),
+                        MaterialPageRoute(builder: (context) => CartView()),
                       );
                     },
                     icon: Icon(Icons.shopping_cart),
