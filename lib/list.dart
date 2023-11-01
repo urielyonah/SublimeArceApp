@@ -36,13 +36,14 @@ class _listpage extends State<listpage> {
   }
 
   Future<void> getUsers() async {
+    //final url = 'http://192.168.43.152:8080/api_app/getClientes.php';
     final url = 'https://apisublimarce.onrender.com/getclientes';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
-
+      print(jsonData);
       if (jsonData is List) {
         setState(() {
           users = jsonData;
