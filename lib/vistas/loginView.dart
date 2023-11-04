@@ -24,10 +24,9 @@ class _loginView extends State<loginView> {
   //drawer(userName: userName, userEmail: userEmail);
 
   Future<void> loginUser() async {
+    final String url = 'http://localhost:3000/login';
 
-    //final String url = 'http://192.168.43.152:8080/api_app/login.php';
-
-    final String url = 'https://apisublimarce.onrender.com/login';
+    //final String url = 'https://apisublimarce.onrender.com/login';
 
     final response = await http.post(
       Uri.parse(url),
@@ -42,8 +41,10 @@ class _loginView extends State<loginView> {
       //print(response.body);
       final user = data['user'];
       // Imprime las credenciales ingresadas y los valores del servidor
-      print('Credenciales ingresadas - Email: ${emailController.text}, Contraseña: ${passwordController.text}');
-      print('Valores del servidor - Email: ${user['CORREO']}, Contraseña: ${user['CONTRASEÑA']}');
+      print(
+          'Credenciales ingresadas - Email: ${emailController.text}, Contraseña: ${passwordController.text}');
+      print(
+          'Valores del servidor - Email: ${user['CORREO']}, Contraseña: ${user['CONTRASEÑA']}');
 
       if (user['CORREO'].toLowerCase() == emailController.text.toLowerCase() &&
           user['CONTRASE\u00d1A'] == passwordController.text) {

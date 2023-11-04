@@ -1,5 +1,6 @@
 import 'package:ejercicio1/vistas/desingView.dart';
 import 'package:ejercicio1/vistas/productsView.dart';
+import 'package:ejercicio1/vistas/perfil.dart';
 import 'package:flutter/material.dart';
 
 class drawer extends StatelessWidget {
@@ -19,8 +20,8 @@ class drawer extends StatelessWidget {
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
-            accountName:  Text(userName),
-            accountEmail:  Text(userEmail),
+            accountName: Text(userName),
+            accountEmail: Text(userEmail),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.network(
@@ -44,7 +45,7 @@ class drawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => desingView()),
+                MaterialPageRoute(builder: (context) => Perfil()),
               );
             },
           ),
@@ -89,6 +90,10 @@ class drawer extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Centro de ayuda'),
+            onTap: () => print('PRESIONASTE CENTRO'),
+          ),
+          ListTile(
+            title: const Text('Cerrar Sesion'),
             onTap: () => print('PRESIONASTE CENTRO'),
           ),
         ], //fin del children

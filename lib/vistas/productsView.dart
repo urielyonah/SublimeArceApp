@@ -3,6 +3,7 @@ import 'cartView.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+<<<<<<< HEAD
 class productsView extends StatelessWidget {
    
   static String tag = "productsView";
@@ -15,80 +16,150 @@ class productsView extends StatelessWidget {
         "Descripción del producto", "\$precio"),
   ];
  
+=======
+class productsView extends StatefulWidget {
+  static String tag = "productsView";
+
+  @override
+  _productsViewState createState() => _productsViewState();
+}
+
+class _productsViewState extends State<productsView> {
+  List<Producto> camisas = [];
+  List<Producto> bolsas = [];
+  List<Producto> tazas = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Llama a la función para cargar los productos desde tu servidor al iniciar la pantalla.
+    cargarProductos();
+  }
+
+  void cargarProductos() async {
+    final response =
+        await http.get(Uri.parse('http://localhost:3000/getproductos'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      // Llena las listas de productos según la categoría.
+      for (final item in data) {
+        final producto = Producto.fromJson(item);
+        if (producto.categoria == 'CAMISAS') {
+          camisas.add(producto);
+        } else if (producto.categoria == 'BOLSAS') {
+          bolsas.add(producto);
+        } else if (producto.categoria == 'TAZAS') {
+          tazas.add(producto);
+        }
+      }
+
+      setState(() {
+        // No es necesario actualizar 'products' ya que ahora estás usando listas separadas.
+      });
+    } else {
+      print('Error al cargar productos: ${response.statusCode}');
+    }
+  }
+
+>>>>>>> 9ffc40717b808e46cd2b912eb2be5d38eecbd026
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 3,
-        child: Scaffold(
-            backgroundColor: Colors.blueAccent,
-            appBar: AppBar(
-                leading: IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    // Regresar a la página anterior
-                    Navigator.pop(context);
-                  },
+      length: 3,
+      child: Scaffold(
+        backgroundColor: Colors.blueAccent,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              // Regresar a la página anterior
+              Navigator.pop(context);
+            },
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartView()),
+                );
+              },
+              icon: Icon(Icons.shopping_cart),
+            ),
+          ],
+          title: Text('Productos'),
+          centerTitle: true,
+          backgroundColor: Colors.purple,
+          bottom: TabBar(
+            tabs: <Widget>[
+              new Tab(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 5, right: 5),
+                  child: Text('CAMISAS'),
                 ),
-                actions: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => CartView()),
-                      );
-                    },
-                    icon: Icon(Icons.shopping_cart),
-                  ),
-                ],
-                title: Text('Productos'),
-                centerTitle: true,
-                backgroundColor: Colors
-                    .purple, // Personaliza el color de acuerdo a tu empresa
-
-                bottom: TabBar(
-                  tabs: <Widget>[
-                    new Tab(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 5, right: 5),
-                        child: Text('camisas'),
-                      ),
-                    ),
-                    new Tab(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 5, right: 5),
-                        child: Text('bolsas'),
-                      ),
-                    ),
-                    new Tab(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 5, right: 5),
-                        child: Text('tazas'),
-                      ),
-                    ),
-                  ],
-                )),
-            body: TabBarView(
-              children: <Widget>[
-                SingleChildScrollView(
-                  child: Column(
-                    children: products
-                        .map((product) => Producto(
-                              product.nombre,
-                              product.imagen,
-                              product.descripcion,
-                              product.precio,
-                            ))
-                        .toList(),
-                  ),
+              ),
+              new Tab(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 5, right: 5),
+                  child: Text('TAZAS'),
                 ),
-                Container(
-                  child: Text("bolsas"),
+              ),
+              new Tab(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 5, right: 5),
+                  child: Text('BOLSAS'),
                 ),
-                Container(
-                  child: Text("tazas"),
-                ),
-              ],
-            )));
+              ),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: <Widget>[
+            SingleChildScrollView(
+              child: Column(
+                children: camisas
+                    .map((product) => Producto(
+                          product.nombre,
+                          product.imagen,
+                          product.descripcion,
+                          product.precio.toDouble(),
+                          product.categoria,
+                        ))
+                    .toList(),
+              ),
+            ),
+            SingleChildScrollView(
+              child: Column(
+                children: tazas
+                    .map((product) => Producto(
+                          product.nombre,
+                          product.imagen,
+                          product.descripcion,
+                          product.precio.toDouble(),
+                          product.categoria,
+                        ))
+                    .toList(),
+              ),
+            ),
+            SingleChildScrollView(
+              child: Column(
+                children: bolsas
+                    .map((product) => Producto(
+                          product.nombre,
+                          product.imagen,
+                          product.descripcion,
+                          product.precio.toDouble(),
+                          product.categoria,
+                        ))
+                    .toList(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -96,17 +167,38 @@ class Producto extends StatefulWidget {
   final String nombre;
   final String imagen;
   final String descripcion;
-  final String precio;
+  final double precio;
+  final String categoria;
 
-  Producto(this.nombre, this.imagen, this.descripcion, this.precio);
+  Producto(
+      this.nombre, this.imagen, this.descripcion, this.precio, this.categoria);
+
+  factory Producto.fromJson(Map<String, dynamic> json) {
+    if (json['NOMBRE'] == null ||
+        json['IMAGEN'] == null ||
+        json['DESCRIPCION'] == null ||
+        json['PRECIO'] == null ||
+        json['CATEGORIA'] == null) {
+      // Maneja el caso en el que uno o más campos sean nulos, por ejemplo, asignando valores predeterminados o lanzando una excepción.
+      return Producto('Nombre no disponible', 'imagen_no_disponible.jpg',
+          'Descripción no disponible', 0.00, 'Categoria no disponible');
+    } else {
+      return Producto(
+        json['NOMBRE'] as String,
+        json['IMAGEN'] as String,
+        json['DESCRIPCION'] as String,
+        json['PRECIO'] as double,
+        json['CATEGORIA'] as String,
+      );
+    }
+  }
 
   @override
-  _ProductoState createState() => _ProductoState();
+  State<Producto> createState() => _ProductoState();
 }
 
 class _ProductoState extends State<Producto> {
-  int cantidad = 0;
-
+  int cantidad = 1;
   void incrementarCantidad() {
     setState(() {
       cantidad++;
@@ -114,7 +206,7 @@ class _ProductoState extends State<Producto> {
   }
 
   void decrementarCantidad() {
-    if (cantidad > 0) {
+    if (cantidad > 1) {
       setState(() {
         cantidad--;
       });
@@ -128,8 +220,12 @@ class _ProductoState extends State<Producto> {
       child: Card(
         child: Row(
           children: [
-            Image.asset(widget.imagen, width: 150, height: 150),
-            SizedBox(width: 10), // Espacio entre la imagen y el contenido
+            Image.network(
+              widget.imagen,
+              width: 150,
+              height: 150,
+            ),
+            SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,7 +235,7 @@ class _ProductoState extends State<Producto> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   Text(widget.descripcion),
-                  Text(widget.precio),
+                  Text("\$ ${widget.precio}"),
                   Row(
                     children: [
                       IconButton(
@@ -159,8 +255,8 @@ class _ProductoState extends State<Producto> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // Aquí puedes agregar el producto al carrito con la cantidad seleccionada
-                      print('Agregado al carrito: ${widget.nombre} x$cantidad');
+                      // Agregar el producto al carrito
+                      print('Agregado al carrito: ${widget.nombre}');
                     },
                     child: Text("Agregar al carrito"),
                   ),
