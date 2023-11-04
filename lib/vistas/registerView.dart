@@ -1,7 +1,7 @@
 import 'package:ejercicio1/list.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+import 'package:http/http.dart' as http;
 
 class registerView extends StatefulWidget {
   static String tag = "registerView";
@@ -10,196 +10,136 @@ class registerView extends StatefulWidget {
 }
 
 class _registerView extends State<registerView> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   bool showPassword = false;
   bool showPassword2 = false;
-  Map<String, String> loginData = {
-    'Email': '',
-    'Contrasena': '',
-  };
 
-  void register() {
-    // Obtener los valores ingresados por el usuario
-    String? email = loginData['Email'];
-    String? password = loginData['Contrasena'];
-    // Aquí puedes realizar las acciones necesarias para registrar al usuario
-    // Por ejemplo, puedes enviar estos valores a un servidor o guardarlos localmente.
+  void register() async {
+    try {
+      final String url = ('https://apisublimarce.onrender.com/register');
+      //final String url = ('http://localhost:3000/register');
 
-    // Imprimir los valores para verificar que se han almacenado correctamente
-    print('Email: $email');
-    print('Contraseña: $password');
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'email': emailController.text,
+          'password': passwordController.text,
+          'name': nameController.text,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Usuario registrado exitosamente');
+        print('correo: ' + emailController.text);
+      } else {
+        print('Error al registrar usuario: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error al registrar usuario: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          color: Color.fromARGB(255, 244, 243, 255),
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            children: <Widget>[
-              Text(
-                'Register',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                ),
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 131, 36, 219),
+        title: Text('Registro'),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          //mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: 16.0),
+            TextFormField(
+              controller: nameController,
+              decoration: InputDecoration(
+                labelText: 'Nombre',
               ),
-              SizedBox(height: 20.0),
-              Card(
-                margin: EdgeInsets.all(16.0),
-                elevation: 2.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Column(
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Text(
-                            'EMAIL',
-                            style: TextStyle(
-                              color: Color(0xFF707070),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        TextFormField(
-                          style: TextStyle(color: Colors.black),
-                          onChanged: (value) {
-                            setState(() {
-                              loginData['Email'] = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            hintText: "Ingrese su correo",
-                            suffixIcon: Icon(
-                              Icons.account_circle,
-                              size: 30.0,
-                              color: const Color.fromARGB(255, 190, 190, 190),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20.0),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Text(
-                            'PASSWORD',
-                            style: TextStyle(
-                              color: Color(0xFF707070),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        TextFormField(
-                          style: TextStyle(color: Colors.black),
-                          obscureText: !showPassword,
-                          onChanged: (value) {
-                            setState(() {
-                              loginData['Contrasena'] = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            hintText: "Ingrese su contraseña",
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                showPassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                size: 30.0,
-                                color: const Color.fromARGB(255, 190, 190, 190),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  showPassword = !showPassword;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Text(
-                            'CONFIRM PASSWORD',
-                            style: TextStyle(
-                              color: Color(0xFF707070),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        TextFormField(
-                          style: TextStyle(color: Colors.black),
-                          obscureText: !showPassword2,
-                          decoration: InputDecoration(
-                            hintText: "Ingrese su contraseña",
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                showPassword2
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                size: 30.0,
-                                color: const Color.fromARGB(255, 190, 190, 190),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  showPassword2 = !showPassword2;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, ingresa tu nombre';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 16.0),
+            TextFormField(
+              controller: emailController,
+              decoration: InputDecoration(
+                labelText: 'Email',
               ),
-              SizedBox(height: 20.0),
-              SizedBox(
-                width: 350,
-                height: 35,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 255, 92, 92),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, ingresa tu correo electrónico';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 16.0),
+            TextFormField(
+              obscureText: !showPassword,
+              controller: passwordController,
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    showPassword ? Icons.visibility_off : Icons.visibility,
+                    size: 30.0,
+                    color: const Color.fromARGB(255, 190, 190, 190),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => _listpage(),
-                            ),
-                          );
+                    setState(() {
+                      showPassword = !showPassword;
+                    });
                   },
-                  child: Text(
-                    'Register',
-                    style: GoogleFonts.getFont(
-                      'Lato',
-                      textStyle: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
                 ),
+                labelText: 'Contraseña',
               ),
-            ],
-          ),
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Ingresa tu contraseña';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 16.0),
+            TextFormField(
+              //controller: passwordController,
+              decoration: InputDecoration(
+                labelText: 'Confirmar Contraseña',
+              ),
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Ingresa tu contraseña nuevamente';
+                }
+                return null;
+              },
+              obscureText: true,
+            ),
+            SizedBox(height: 30.0),
+            MaterialButton(
+              height: 35,
+              minWidth: 250,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              onPressed: () {
+                register();
+              },
+              padding: EdgeInsets.all(12),
+              color: Color.fromARGB(255, 219, 36, 176),
+              child: Text('Registrarse',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  )),
+            ),
+          ],
         ),
       ),
     );

@@ -92,6 +92,10 @@ class drawer extends StatelessWidget {
             title: const Text('Centro de ayuda'),
             onTap: () => print('PRESIONASTE CENTRO'),
           ),
+          ListTile(
+            title: const Text('Cerrar Sesion'),
+            onTap: () => print('PRESIONASTE CENTRO'),
+          ),
         ], //fin del children
       ),
     );
