@@ -19,8 +19,8 @@ class _registerView extends State<registerView> {
 
   void register() async {
     try {
-      final String url = ('https://apisublimarce.onrender.com/register');
-      //final String url = ('http://localhost:3000/register');
+      //final String url = ('https://apisublimarce.onrender.com/register');
+      final String url = ('http://localhost:3000/register');
 
       final response = await http.post(
         Uri.parse(url),
