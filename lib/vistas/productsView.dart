@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'cartView.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class productsView extends StatelessWidget {
+   
   static String tag = "productsView";
   final List<Producto> products = [
     Producto("Nombre del artículo 1", "assets/camisacafe.jpg",
@@ -11,6 +14,7 @@ class productsView extends StatelessWidget {
     Producto("Nombre del artículo 3", "assets/camisanegra.jpg",
         "Descripción del producto", "\$precio"),
   ];
+ 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
