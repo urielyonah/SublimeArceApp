@@ -1,28 +1,21 @@
 import 'package:flutter/material.dart';
-
-class Product {
-  final String nombre;
-  final double precio;
-  final String imagen;
-  int cantidad;
-
-  Product(this.imagen, this.nombre, this.precio, this.cantidad);
-}
+import 'package:ejercicio1/vistas/productsView.dart';
 
 class CartView extends StatefulWidget {
-  const CartView({Key? key}) : super(key: key);
+  
+  final List<Producto> carrito;
+  
+
+  const CartView({Key? key, required this.carrito}) : super(key: key);
 
   @override
   _CartViewState createState() => _CartViewState();
 }
 
 class _CartViewState extends State<CartView> {
-  List<Product> carrito = [
-    Product('camisanegra.jpg', 'Producto 1', 10.0, 1),
-    Product('camisagris.jpg', 'Producto 2', 15.0, 1),
-    Product('camisacafe.jpg', 'Producto 3', 20.0, 1),
-  ];
-
+  List<Producto> carrito = [];
+  
+  
   void incrementarCantidad(int index) {
     setState(() {
       carrito[index].cantidad++;

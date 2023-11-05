@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'cartView.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ejercicio1/vistas/productsView.dart';
 
 class desingView extends StatelessWidget {
   static String tag = "designView";
-
+  List<Producto> productosEnCarrito = [];
   // Lista de ejemplo de productos
-  final List<Producto> products = [
-    Producto("Camisa 1", "assets/camisacafe.jpg", "Descripción 1", "\$20.00"),
-    Producto("Camisa 2", "assets/camisagris.jpg", "Descripción 2", "\$25.00"),
-    Producto("Camisa 3", "assets/camisanegra.jpg", "Descripción 3", "\$18.00"),
-  ];
+  final List<Producto> products = [];
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +26,7 @@ class desingView extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CartView()),
+                MaterialPageRoute(builder: (context) => CartView(carrito: productosEnCarrito)),
               );
             },
             icon: Icon(Icons.shopping_cart),
@@ -49,7 +46,7 @@ class desingView extends StatelessWidget {
               leading: Image.asset(product.imagen),
               title: Text(product.nombre),
               subtitle: Text(product.descripcion),
-              trailing: Text(product.precio),
+              trailing: Text("Precio: \$${product.precio.toStringAsFixed(2)}"),
               onTap: () {
                 // Navegar a la vista de detalles del producto
                 Navigator.push(
@@ -68,14 +65,6 @@ class desingView extends StatelessWidget {
   }
 }
 
-class Producto {
-  final String nombre;
-  final String imagen;
-  final String descripcion;
-  final String precio;
-
-  Producto(this.nombre, this.imagen, this.descripcion, this.precio);
-}
 
 class DetallesProductoView extends StatefulWidget {
   final Producto product;

@@ -3,23 +3,9 @@ import 'cartView.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-<<<<<<< HEAD
-class productsView extends StatelessWidget {
-   
-  static String tag = "productsView";
-  final List<Producto> products = [
-    Producto("Nombre del artículo 1", "assets/camisacafe.jpg",
-        "Descripción del producto", "\$precio"),
-    Producto("Nombre del artículo 2", "assets/camisagris.jpg",
-        "Descripción del producto", "\$precio"),
-    Producto("Nombre del artículo 3", "assets/camisanegra.jpg",
-        "Descripción del producto", "\$precio"),
-  ];
- 
-=======
+
 class productsView extends StatefulWidget {
   static String tag = "productsView";
-
   @override
   _productsViewState createState() => _productsViewState();
 }
@@ -28,6 +14,8 @@ class _productsViewState extends State<productsView> {
   List<Producto> camisas = [];
   List<Producto> bolsas = [];
   List<Producto> tazas = [];
+  List<Producto> productosEnCarrito = [];
+
 
   @override
   void initState() {
@@ -37,11 +25,12 @@ class _productsViewState extends State<productsView> {
   }
 
   void cargarProductos() async {
-    final response =
-        await http.get(Uri.parse('http://localhost:3000/getproductos'));
+    final response = await http
+        .get(Uri.parse('https://apisublimarce.onrender.com/getproductos'));
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
+      final dynamic data = json.decode(response.body);
+      print(data);
 
       // Llena las listas de productos según la categoría.
       for (final item in data) {
@@ -63,7 +52,6 @@ class _productsViewState extends State<productsView> {
     }
   }
 
->>>>>>> 9ffc40717b808e46cd2b912eb2be5d38eecbd026
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -83,7 +71,9 @@ class _productsViewState extends State<productsView> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CartView()),
+                  MaterialPageRoute(
+                    builder: (context) => CartView(carrito: productosEnCarrito),
+                  ),
                 );
               },
               icon: Icon(Icons.shopping_cart),
@@ -121,11 +111,13 @@ class _productsViewState extends State<productsView> {
               child: Column(
                 children: camisas
                     .map((product) => Producto(
+                          product.id,
                           product.nombre,
                           product.imagen,
                           product.descripcion,
                           product.precio.toDouble(),
                           product.categoria,
+                          product.cantidad,
                         ))
                     .toList(),
               ),
@@ -134,11 +126,13 @@ class _productsViewState extends State<productsView> {
               child: Column(
                 children: tazas
                     .map((product) => Producto(
+                          product.id,
                           product.nombre,
                           product.imagen,
                           product.descripcion,
                           product.precio.toDouble(),
                           product.categoria,
+                          product.cantidad,
                         ))
                     .toList(),
               ),
@@ -147,11 +141,13 @@ class _productsViewState extends State<productsView> {
               child: Column(
                 children: bolsas
                     .map((product) => Producto(
+                          product.id,
                           product.nombre,
                           product.imagen,
                           product.descripcion,
                           product.precio.toDouble(),
                           product.categoria,
+                          product.cantidad,
                         ))
                     .toList(),
               ),
@@ -164,31 +160,37 @@ class _productsViewState extends State<productsView> {
 }
 
 class Producto extends StatefulWidget {
+  final int id;
   final String nombre;
   final String imagen;
   final String descripcion;
   final double precio;
   final String categoria;
+  int cantidad;
 
-  Producto(
-      this.nombre, this.imagen, this.descripcion, this.precio, this.categoria);
+  Producto(this.id, this.nombre, this.imagen, this.descripcion, this.precio,this.categoria, this.cantidad);
 
   factory Producto.fromJson(Map<String, dynamic> json) {
-    if (json['NOMBRE'] == null ||
+    if (json['ID-PRODUCTOS'] == null ||
+        json['NOMBRE'] == null ||
         json['IMAGEN'] == null ||
         json['DESCRIPCION'] == null ||
         json['PRECIO'] == null ||
-        json['CATEGORIA'] == null) {
+        json['CATEGORIA'] == null||
+        json['CANTIDAD'] == null ) {
       // Maneja el caso en el que uno o más campos sean nulos, por ejemplo, asignando valores predeterminados o lanzando una excepción.
-      return Producto('Nombre no disponible', 'imagen_no_disponible.jpg',
-          'Descripción no disponible', 0.00, 'Categoria no disponible');
+      return Producto(0, 'Nombre no disponible', 'imagen_no_disponible.jpg',
+          'Descripción no disponible', 0.00, 'Categoria no disponible',0);
     } else {
       return Producto(
+        json['ID-PRODUCTOS'] as int,
         json['NOMBRE'] as String,
         json['IMAGEN'] as String,
         json['DESCRIPCION'] as String,
         json['PRECIO'] as double,
         json['CATEGORIA'] as String,
+        json['CANTIDAD'] as int,
+        
       );
     }
   }
@@ -198,6 +200,7 @@ class Producto extends StatefulWidget {
 }
 
 class _ProductoState extends State<Producto> {
+  List<Producto> productosEnCarrito = [];
   int cantidad = 1;
   void incrementarCantidad() {
     setState(() {
@@ -254,10 +257,20 @@ class _ProductoState extends State<Producto> {
                     ],
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      // Agregar el producto al carrito
-                      print('Agregado al carrito: ${widget.nombre}');
-                    },
+                     onPressed: () {
+                        final productoSeleccionado = Producto(
+                        widget.id,
+                        widget.nombre,
+                        widget.imagen,
+                        widget.descripcion,
+                        widget.precio, // Convierte el precio a double si es necesario
+                        widget.categoria,
+                        widget.cantidad,
+                  );
+                  setState(() {
+                  productosEnCarrito.add(productoSeleccionado);
+                    });
+                  },
                     child: Text("Agregar al carrito"),
                   ),
                 ],
