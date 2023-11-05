@@ -2,6 +2,7 @@ import 'package:ejercicio1/vistas/desingView.dart';
 import 'package:ejercicio1/vistas/productsView.dart';
 import 'package:ejercicio1/vistas/perfil.dart';
 import 'package:flutter/material.dart';
+import 'package:ejercicio1/vistas/loginView.dart';
 
 class drawer extends StatelessWidget {
   static String tag = 'drawer';
@@ -94,7 +95,10 @@ class drawer extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Cerrar Sesion'),
-            onTap: () => print('PRESIONASTE CENTRO'),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => loginView()),
+            ),
           ),
         ], //fin del children
       ),
