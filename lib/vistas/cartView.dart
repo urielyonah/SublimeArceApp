@@ -1,34 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:ejercicio1/vistas/productsView.dart';
+import 'package:ejercicio1/bd/producto.dart';
 
 class CartView extends StatefulWidget {
-  
-  final List<Producto> carrito;
-  
+  final List<Producto> productos; // Lista de productos disponibles
+  //final CartItem? itemToAdd; // Elemento a agregar al carrito
 
-  const CartView({Key? key, required this.carrito}) : super(key: key);
+  const CartView({Key? key, this.productos = const []}) : super(key: key);
 
   @override
   _CartViewState createState() => _CartViewState();
 }
 
 class _CartViewState extends State<CartView> {
-  List<Producto> carrito = [];
-  
-  
-  void incrementarCantidad(int index) {
-    setState(() {
-      carrito[index].cantidad++;
-    });
-  }
-
-  void decrementarCantidad(int index) {
-    setState(() {
-      if (carrito[index].cantidad > 1) {
-        carrito[index].cantidad--;
-      }
-    });
-  }
+  List<CartItem> carrito = []; // Descomenta esta línea para inicializar la lista de carrito
 
   @override
   Widget build(BuildContext context) {
@@ -37,99 +21,24 @@ class _CartViewState extends State<CartView> {
         title: Text("Carrito de compras"),
         centerTitle: true,
       ),
-      body: Column(
-        children: <Widget>[
-          // Botones de ordenación
-          Divider(height: 50),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    carrito.sort((a, b) => a.nombre.compareTo(b.nombre));
-                  });
-                },
-                child: Text('Ordenar por Nombre'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    carrito.sort((a, b) => a.precio.compareTo(b.precio));
-                  });
-                },
-                child: Text('Ordenar por Precio'),
-              ),
-            ],
-          ),
-          // Lista de productos en el carrito
-          Expanded(
-            child: ListView.builder(
-              itemCount: carrito.length,
-              itemBuilder: (context, index) {
-                final producto = carrito[index];
-                return ListTile(
-                  leading: Container(
-                    width: 100,
-                    height: 100,
-                    child: Image.asset(producto.imagen),
-                  ),
-                  title: Text(producto.nombre),
-                  subtitle: Text('\$${producto.precio.toStringAsFixed(2)}'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize
-                        .min, // Asegura que el Row no intente ocupar todo el espacio disponible
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.remove),
-                        onPressed: () {
-                          decrementarCantidad(index);
-                        },
-                      ),
-                      Text('${producto.cantidad}'),
-                      IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () {
-                          incrementarCantidad(index);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          setState(
-                            () {
-                              carrito.remove(producto);
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-          // Subtotal o Total
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
+      body: ListView.builder(
+        itemCount: widget.productos.length, // Usa widget.productos en lugar de carrito
+        itemBuilder: (context, index) {
+          final item = widget.productos[index]; // Usa widget.productos en lugar de carrito
+          return ListTile(
+            title: Text(item.nombre),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Total: \$${carrito.fold(0.0, (total, producto) => total + (producto.cantidad * producto.precio)).toStringAsFixed(2)}',
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(height: 16), // Espacio entre el Text y el botón
-                ElevatedButton(
-                  onPressed: () {
-                    // Agrega aquí la lógica para cotizar o ordenar
-                  },
-                  child: Text('Cotizar u Ordenar'),
-                ),
+                Text("Descripción: ${item.descripcion}"),
+                Text("Precio: \$${item.precio}"),
+                // Puedes agregar más detalles según la estructura de tu Producto
               ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 }
+

@@ -1,6 +1,7 @@
 import 'package:ejercicio1/list.dart';
+import 'package:ejercicio1/vistas/loginView.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class registerView extends StatefulWidget {
@@ -13,34 +14,116 @@ class _registerView extends State<registerView> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
 
   bool showPassword = false;
   bool showPassword2 = false;
 
   void register() async {
-    try {
-      final String url = ('https://apisublimarce.onrender.com/register');
-      //final String url = ('http://localhost:3000/register');
-
-      final response = await http.post(
-        Uri.parse(url),
-        body: {
-          'email': emailController.text,
-          'password': passwordController.text,
-          'name': nameController.text,
+    // Validate empty fields
+    if (nameController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Ingresa tu nombre'),
+          );
         },
       );
+      return;
+    }
+    if (emailController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Ingresa tu correo electrónico'),
+          );
+        },
+      );
+      return;
+    }
+    if (phoneController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Ingresa tu número de teléfono'),
+          );
+        },
+      );
+      return;
+    }
+    if (addressController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Ingresa tu dirección'),
+          );
+        },
+      );
+      return;
+    }
 
-      if (response.statusCode == 200) {
-        print('Usuario registrado exitosamente');
-        print('correo: ' + emailController.text);
-      } else {
-        print('Error al registrar usuario: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error al registrar usuario: $e');
+    // Validate passwords
+    if (passwordController.text.isEmpty ||
+        passwordController.text.length < 5) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Contraseña inválida'),
+            content: Text(
+                'La contraseña debe tener al menos 5 caracteres'),
+          );
+        },
+      );
+      return;
+    }
+    if (passwordController.text != confirmPasswordController.text) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Contraseñas no coinciden'),
+            content: Text(
+                'Las contraseñas deben ser iguales'),
+          );
+        },
+      );
+      return;
+    }
+
+    // Proceed with registration
+    final response = await http.post(
+      Uri.parse('https://apisublimarce.onrender.com/register'),
+      body: {
+        'email': emailController.text,
+        'password': passwordController.text,
+        'name': nameController.text,
+        'phone': phoneController.text,
+        'address': addressController.text,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Usuario Registrado Exitosamente!'),
+        ),
+      );
+      Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>_loginView(),
+          ),
+          );
+    } else {
+      print('Error al registrar usuario: ${response.statusCode}');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,12 +144,6 @@ class _registerView extends State<registerView> {
               decoration: InputDecoration(
                 labelText: 'Nombre',
               ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Por favor, ingresa tu nombre';
-                }
-                return null;
-              },
             ),
             SizedBox(height: 16.0),
             TextFormField(
@@ -74,12 +151,6 @@ class _registerView extends State<registerView> {
               decoration: InputDecoration(
                 labelText: 'Email',
               ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Por favor, ingresa tu correo electrónico';
-                }
-                return null;
-              },
             ),
             SizedBox(height: 16.0),
             TextFormField(
@@ -100,26 +171,28 @@ class _registerView extends State<registerView> {
                 ),
                 labelText: 'Contraseña',
               ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Ingresa tu contraseña';
-                }
-                return null;
-              },
             ),
             SizedBox(height: 16.0),
             TextFormField(
-              //controller: passwordController,
+              controller: confirmPasswordController,
               decoration: InputDecoration(
                 labelText: 'Confirmar Contraseña',
               ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Ingresa tu contraseña nuevamente';
-                }
-                return null;
-              },
               obscureText: true,
+            ),
+            SizedBox(height: 16.0),
+            TextFormField(
+              controller: phoneController,
+              decoration: InputDecoration(
+                labelText: 'Telefono',
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextFormField(
+              controller: addressController,
+              decoration: InputDecoration(
+                labelText: 'Direccion',
+              ),
             ),
             SizedBox(height: 30.0),
             MaterialButton(
@@ -150,5 +223,12 @@ class _listpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return listpage();
+  }
+}
+
+class _loginView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return loginView();
   }
 }

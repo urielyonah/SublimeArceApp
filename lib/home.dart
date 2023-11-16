@@ -1,5 +1,4 @@
 import 'package:ejercicio1/vistas/cartView.dart';
-import 'package:ejercicio1/vistas/productsView.dart';
 
 import 'drawer.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +6,13 @@ import 'routes.dart';
 
 class home extends StatefulWidget {
   final Function currentIndex;
-  const home({super.key, required this.currentIndex});
+  const home({Key? key, required this.currentIndex}):super(key: key);
 
   @override
   State<home> createState() => _homeState();
 }
 
 class _homeState extends State<home> {
-  List<Producto> productosEnCarrito = [];
   int index = 0;
   @override
   Widget build(BuildContext context) {
@@ -54,7 +52,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int index = 0;
   home? myBNB;
-  List<Producto> productosEnCarrito = [];
   @override
   void initState() {
     myBNB = home(currentIndex: (i) {
@@ -75,7 +72,7 @@ class _HomeState extends State<Home> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CartView(carrito: productosEnCarrito)),
+                  MaterialPageRoute(builder: (context) => CartView()),
                 );
               },
               icon: Icon(Icons.shopping_cart))

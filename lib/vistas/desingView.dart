@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'cartView.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ejercicio1/vistas/productsView.dart';
+import 'package:ejercicio1/bd/producto.dart';
 
 class desingView extends StatelessWidget {
   static String tag = "designView";
@@ -26,7 +26,7 @@ class desingView extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CartView(carrito: productosEnCarrito)),
+                MaterialPageRoute(builder: (context) => CartView()),
               );
             },
             icon: Icon(Icons.shopping_cart),
