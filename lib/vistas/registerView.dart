@@ -1,7 +1,6 @@
 import 'package:ejercicio1/list.dart';
 import 'package:ejercicio1/vistas/loginView.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class registerView extends StatefulWidget {
@@ -14,7 +13,8 @@ class _registerView extends State<registerView> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
 
@@ -69,15 +69,13 @@ class _registerView extends State<registerView> {
     }
 
     // Validate passwords
-    if (passwordController.text.isEmpty ||
-        passwordController.text.length < 5) {
+    if (passwordController.text.isEmpty || passwordController.text.length < 5) {
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text('Contraseña inválida'),
-            content: Text(
-                'La contraseña debe tener al menos 5 caracteres'),
+            content: Text('La contraseña debe tener al menos 5 caracteres'),
           );
         },
       );
@@ -89,8 +87,7 @@ class _registerView extends State<registerView> {
         builder: (context) {
           return AlertDialog(
             title: Text('Contraseñas no coinciden'),
-            content: Text(
-                'Las contraseñas deben ser iguales'),
+            content: Text('Las contraseñas deben ser iguales'),
           );
         },
       );
@@ -115,15 +112,15 @@ class _registerView extends State<registerView> {
           content: Text('Usuario Registrado Exitosamente!'),
         ),
       );
-      Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>_loginView(),
-          ),
-          );
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => _loginView(),
+        ),
+      );
     } else {
       print('Error al registrar usuario: ${response.statusCode}');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

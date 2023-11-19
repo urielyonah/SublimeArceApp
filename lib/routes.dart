@@ -1,6 +1,7 @@
 import 'package:ejercicio1/vistas/desingView.dart';
 import 'package:ejercicio1/vistas/homeView.dart';
 import 'package:ejercicio1/vistas/productsView.dart';
+import 'package:ejercicio1/vistas/pedidosView.dart';
 import 'package:flutter/material.dart';
 
 class Routes extends StatelessWidget {
@@ -9,7 +10,12 @@ class Routes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> myList = [homeView(), desingView(), productsView()];
+    List<Widget> myList = [
+      homeView(),
+      ListaPedidosView(),
+      desingView(),
+      productsView()
+    ];
     return myList[index];
   }
 }

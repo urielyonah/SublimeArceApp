@@ -1,13 +1,56 @@
 import 'package:flutter/material.dart';
 import 'cartView.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
-import 'package:ejercicio1/bd/producto.dart';
+import 'package:ejercicio1/bd/camisa.dart';
 
-class desingView extends StatelessWidget {
+class desingView extends StatefulWidget {
   static String tag = "designView";
-  List<Producto> productosEnCarrito = [];
-  // Lista de ejemplo de productos
-  final List<Producto> products = [];
+
+  @override
+  State<desingView> createState() => _desingViewState();
+}
+
+class _desingViewState extends State<desingView> {
+  List<Camisa> productosEnCarrito = [];
+  List<Camisa> camisas = [];
+
+  Camisa getProductById(int camisaId) {
+    for (final camisa in camisas) {
+      if (camisa.id == camisaId) {
+        return camisa;
+      }
+    }
+    return Camisa(0, 'Modelo no encontrado', '', '', 0.0, '', 0, '');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    cargarCamisas();
+  }
+
+  void cargarCamisas() async {
+    final response = await http
+        .get(Uri.parse("https://apisublimarce.onrender.com/getcamisas"));
+
+    if (response.statusCode == 200) {
+      final dynamic data = json.decode(response.body);
+
+      for (final item in data) {
+        final camisa = Camisa.fromJson(item);
+        camisas.add(camisa);
+      }
+      print('------------CAMISAS------------');
+      camisas.forEach((camisa) {
+        print('ID: ${camisa.id}, MODELO: ${camisa.modelo}');
+      });
+      setState(() {});
+    } else {
+      print('Error al cargar las camisas: ${response.statusCode}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +81,25 @@ class desingView extends StatelessWidget {
             Colors.purple, // Personaliza el color de acuerdo a tu empresa
       ),
       body: ListView.builder(
-        itemCount: products.length,
+        itemCount: camisas.length,
         itemBuilder: (context, index) {
-          final product = products[index];
+          final product = camisas[index];
           return Card(
             child: ListTile(
-              leading: Image.asset(product.imagen),
-              title: Text(product.nombre),
+              isThreeLine: true,
+              leading: Image.network(
+                product.imagen,
+                height: 100,
+              ),
+              title: Text(product.modelo),
               subtitle: Text(product.descripcion),
-              trailing: Text("Precio: \$${product.precio.toStringAsFixed(2)}"),
+              trailing: Column(
+                children: [
+                  Text("Precio: \$${product.precio.toStringAsFixed(2)}"),
+                  Text("Talla: ${product.tallas}"),
+                  Text("Color: ${product.color}"),
+                ],
+              ),
               onTap: () {
                 // Navegar a la vista de detalles del producto
                 Navigator.push(
@@ -65,9 +118,8 @@ class desingView extends StatelessWidget {
   }
 }
 
-
 class DetallesProductoView extends StatefulWidget {
-  final Producto product;
+  final Camisa product;
 
   DetallesProductoView({required this.product});
 
@@ -76,8 +128,6 @@ class DetallesProductoView extends StatefulWidget {
 }
 
 class _DetallesProductoViewState extends State<DetallesProductoView> {
-  String selectedTalla = 'S';
-  String selectedColor = 'Blanco';
   int cantidad = 1;
   String selectedServicio = 'Sublimado';
   String selectedAreaServicio = 'Pecho';
@@ -97,7 +147,7 @@ class _DetallesProductoViewState extends State<DetallesProductoView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.product.nombre),
+        title: Text(widget.product.modelo),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -110,50 +160,16 @@ class _DetallesProductoViewState extends State<DetallesProductoView> {
                 child: Container(
                   width: 200, // Ancho deseado
                   height: 200, // Alto deseado
-                  child: Image.asset(widget.product.imagen),
+                  child: Image.network(widget.product.imagen),
                 ),
               ),
               SizedBox(height: 16),
               Text("Descripción: ${widget.product.descripcion}"),
               SizedBox(height: 16),
-              Text("Precio: ${widget.product.precio}"),
+              Text("Precio: ${widget.product.precio.toStringAsFixed(2)}"),
               SizedBox(height: 16),
               Row(
                 children: [
-                  Text("Talla: "),
-                  DropdownButton<String>(
-                    value: selectedTalla,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedTalla = newValue!;
-                      });
-                    },
-                    items: <String>['S', 'M', 'L', 'XL']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(width: 16),
-                  Text("Color: "),
-                  DropdownButton<String>(
-                    value: selectedColor,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedColor = newValue!;
-                      });
-                    },
-                    items: <String>['Blanco', 'Negro', 'Azul', 'Rojo']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(width: 16),
                   Text("Servicio: "),
                   DropdownButton<String>(
                     value: selectedServicio,
@@ -260,7 +276,7 @@ class _DetallesProductoViewState extends State<DetallesProductoView> {
                 child: ElevatedButton(
                   onPressed: () {
                     print(
-                        'Agregado al carrito: ${widget.product.nombre} x$cantidad, talla: $selectedTalla, color: $selectedColor, servicio: $selectedServicio, area: $selectedAreaServicio');
+                        'Agregado al carrito: ${widget.product.modelo} x$cantidad, servicio: $selectedServicio, area: $selectedAreaServicio');
                   },
                   child: Text("Agregar al carrito"),
                 ),

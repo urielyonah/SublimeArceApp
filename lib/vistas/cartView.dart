@@ -12,7 +12,8 @@ class CartView extends StatefulWidget {
 }
 
 class _CartViewState extends State<CartView> {
-  List<CartItem> carrito = []; // Descomenta esta línea para inicializar la lista de carrito
+  List<CartItem> carrito =
+      []; // Descomenta esta línea para inicializar la lista de carrito
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +23,11 @@ class _CartViewState extends State<CartView> {
         centerTitle: true,
       ),
       body: ListView.builder(
-        itemCount: widget.productos.length, // Usa widget.productos en lugar de carrito
+        itemCount:
+            widget.productos.length, // Usa widget.productos en lugar de carrito
         itemBuilder: (context, index) {
-          final item = widget.productos[index]; // Usa widget.productos en lugar de carrito
+          final item = widget
+              .productos[index]; // Usa widget.productos en lugar de carrito
           return ListTile(
             title: Text(item.nombre),
             subtitle: Column(
@@ -41,4 +44,3 @@ class _CartViewState extends State<CartView> {
     );
   }
 }
-
