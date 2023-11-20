@@ -4,9 +4,9 @@ import 'package:ejercicio1/vistas/cartView.dart';
 class Producto extends StatefulWidget {
   final int id;
   final String nombre;
+  final double precio;
   final String imagen;
   final String descripcion;
-  final double precio;
   final String categoria;
 
   Producto(this.id, this.nombre, this.imagen, this.descripcion, this.precio,

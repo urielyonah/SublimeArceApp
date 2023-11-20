@@ -51,7 +51,6 @@ class _productsViewState extends State<productsView> {
     if (response.statusCode == 200) {
       final dynamic data = json.decode(response.body);
       //print(data);
-
       // Llena las listas de productos según la categoría.
       for (final item in data) {
         final producto = Producto.fromJson(item);

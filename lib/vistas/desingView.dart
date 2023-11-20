@@ -1,13 +1,42 @@
 import 'package:flutter/material.dart';
-import 'cartView.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ejercicio1/bd/producto.dart';
+import 'cartView.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:ejercicio1/bd/camisas.dart';
 
-class desingView extends StatelessWidget {
+class desingView extends StatefulWidget {
   static String tag = "designView";
-  List<Producto> productosEnCarrito = [];
-  // Lista de ejemplo de productos
-  final List<Producto> products = [];
+
+  @override
+  _DesingViewState createState() => _DesingViewState();
+}
+
+class _DesingViewState extends State<desingView>{
+  List<Camisas> camisas = [];
+  void cargarCamisas() async {
+    final response = await http.get(Uri.parse('https://apisublimarce.onrender.com/getCamisas'));
+    if (response.statusCode == 200) {
+      final dynamic data = json.decode(response.body);
+      
+      for (final item in data) {
+        final camisa = Camisas.fromJson(item);
+        camisas.add(camisa);
+      }
+      setState(() {
+        // Actualizar el estado con la lista de camisas cargadas.
+        camisas = camisas;
+      });
+    } else {
+      print('Error al cargar camisas: ${response.statusCode}');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    cargarCamisas();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,22 +67,21 @@ class desingView extends StatelessWidget {
             Colors.purple, // Personaliza el color de acuerdo a tu empresa
       ),
       body: ListView.builder(
-        itemCount: products.length,
+        itemCount: camisas.length,
         itemBuilder: (context, index) {
-          final product = products[index];
+          final camisa = camisas[index];
           return Card(
             child: ListTile(
-              leading: Image.asset(product.imagen),
-              title: Text(product.nombre),
-              subtitle: Text(product.descripcion),
-              trailing: Text("Precio: \$${product.precio.toStringAsFixed(2)}"),
+              leading: Image.network(camisa.imagen),
+              title: Text(camisa.modelo),
+              subtitle: Text(camisa.descripcion),
+              trailing: Text("Precio: \$${camisa.precio.toStringAsFixed(2)}"),
               onTap: () {
                 // Navegar a la vista de detalles del producto
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        DetallesProductoView(product: product),
+                    builder: (context) =>DetallesCamisasView(camisa: camisa),
                   ),
                 );
               },
@@ -65,17 +93,16 @@ class desingView extends StatelessWidget {
   }
 }
 
+class DetallesCamisasView extends StatefulWidget{
+  final Camisas camisa;
 
-class DetallesProductoView extends StatefulWidget {
-  final Producto product;
-
-  DetallesProductoView({required this.product});
-
+  DetallesCamisasView({required this.camisa});
   @override
-  _DetallesProductoViewState createState() => _DetallesProductoViewState();
+  _DetallesCamisasViewState createState() => _DetallesCamisasViewState();
 }
 
-class _DetallesProductoViewState extends State<DetallesProductoView> {
+class _DetallesCamisasViewState extends State<DetallesCamisasView> {
+
   String selectedTalla = 'S';
   String selectedColor = 'Blanco';
   int cantidad = 1;
@@ -97,7 +124,7 @@ class _DetallesProductoViewState extends State<DetallesProductoView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.product.nombre),
+        title: Text(widget.camisa.modelo),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -110,13 +137,13 @@ class _DetallesProductoViewState extends State<DetallesProductoView> {
                 child: Container(
                   width: 200, // Ancho deseado
                   height: 200, // Alto deseado
-                  child: Image.asset(widget.product.imagen),
+                  child: Image.network(widget.camisa.imagen),
                 ),
               ),
               SizedBox(height: 16),
-              Text("Descripción: ${widget.product.descripcion}"),
+              Text("Descripción: ${widget.camisa.descripcion}"),
               SizedBox(height: 16),
-              Text("Precio: ${widget.product.precio}"),
+              Text("Precio: ${widget.camisa.precio}"),
               SizedBox(height: 16),
               Row(
                 children: [
@@ -244,8 +271,7 @@ class _DetallesProductoViewState extends State<DetallesProductoView> {
               Text("Cargar imagen:"),
               ElevatedButton(
                 onPressed: () {
-                  _pickImage(ImageSource
-                      .gallery); // Debes reemplazar 'ruta_de_la_imagen' con la ruta real
+                  _pickImage(ImageSource.gallery); // Debes reemplazar 'ruta_de_la_imagen' con la ruta real
                 },
                 child: Text("Cargar imagen"),
               ),
@@ -259,8 +285,7 @@ class _DetallesProductoViewState extends State<DetallesProductoView> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    print(
-                        'Agregado al carrito: ${widget.product.nombre} x$cantidad, talla: $selectedTalla, color: $selectedColor, servicio: $selectedServicio, area: $selectedAreaServicio');
+                    print('Agregado al carrito: ${widget.camisa.modelo} x $cantidad, talla: $selectedTalla, color: $selectedColor, servicio: $selectedServicio, area: $selectedAreaServicio');
                   },
                   child: Text("Agregar al carrito"),
                 ),
