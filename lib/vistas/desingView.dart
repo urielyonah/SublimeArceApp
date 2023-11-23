@@ -12,13 +12,15 @@ class desingView extends StatefulWidget {
   _DesingViewState createState() => _DesingViewState();
 }
 
-class _DesingViewState extends State<desingView>{
+class _DesingViewState extends State<desingView> {
   List<Camisas> camisas = [];
   void cargarCamisas() async {
-    final response = await http.get(Uri.parse('https://apisublimarce.onrender.com/getCamisas'));
+    //final response = await http.get(Uri.parse('https://apisublimarce.onrender.com/getCamisas'));
+    final response =
+        await http.get(Uri.parse('http://localhost:3000/getCamisas'));
     if (response.statusCode == 200) {
       final dynamic data = json.decode(response.body);
-      
+
       for (final item in data) {
         final camisa = Camisas.fromJson(item);
         camisas.add(camisa);
@@ -81,7 +83,7 @@ class _DesingViewState extends State<desingView>{
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>DetallesCamisasView(camisa: camisa),
+                    builder: (context) => DetallesCamisasView(camisa: camisa),
                   ),
                 );
               },
@@ -93,7 +95,7 @@ class _DesingViewState extends State<desingView>{
   }
 }
 
-class DetallesCamisasView extends StatefulWidget{
+class DetallesCamisasView extends StatefulWidget {
   final Camisas camisa;
 
   DetallesCamisasView({required this.camisa});
@@ -102,7 +104,6 @@ class DetallesCamisasView extends StatefulWidget{
 }
 
 class _DetallesCamisasViewState extends State<DetallesCamisasView> {
-
   String selectedTalla = 'S';
   String selectedColor = 'Blanco';
   int cantidad = 1;
@@ -271,7 +272,8 @@ class _DetallesCamisasViewState extends State<DetallesCamisasView> {
               Text("Cargar imagen:"),
               ElevatedButton(
                 onPressed: () {
-                  _pickImage(ImageSource.gallery); // Debes reemplazar 'ruta_de_la_imagen' con la ruta real
+                  _pickImage(ImageSource
+                      .gallery); // Debes reemplazar 'ruta_de_la_imagen' con la ruta real
                 },
                 child: Text("Cargar imagen"),
               ),
@@ -285,7 +287,8 @@ class _DetallesCamisasViewState extends State<DetallesCamisasView> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    print('Agregado al carrito: ${widget.camisa.modelo} x $cantidad, talla: $selectedTalla, color: $selectedColor, servicio: $selectedServicio, area: $selectedAreaServicio');
+                    print(
+                        'Agregado al carrito: ${widget.camisa.modelo} x $cantidad, talla: $selectedTalla, color: $selectedColor, servicio: $selectedServicio, area: $selectedAreaServicio');
                   },
                   child: Text("Agregar al carrito"),
                 ),

@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:ejercicio1/bd/UserData.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ejercicio1/vistas/pedidosView.dart';
 
 import '../home.dart';
 import 'registerView.dart';
@@ -18,15 +20,10 @@ class _loginView extends State<loginView> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  String userName = ''; // Variable para almacenar el nombre del usuario
-  String userEmail =
-      ''; // Variable para almacenar el correo electrónico del usuario
-  //drawer(userName: userName, userEmail: userEmail);
-
   Future<void> loginUser() async {
-    //final String url = 'http://localhost:3000/login';
+    final String url = 'http://localhost:3000/login';
 
-    final String url = 'https://apisublimarce.onrender.com/login';
+    //final String url = 'https://apisublimarce.onrender.com/login';
 
     final response = await http.post(
       Uri.parse(url),
@@ -49,17 +46,19 @@ class _loginView extends State<loginView> {
       if (user['CORREO'].toLowerCase() == emailController.text.toLowerCase() &&
           user['CONTRASE\u00d1A'] == passwordController.text) {
         // Datos coinciden, navega a Home
-        userName = user['NOMBRE'];
-        userEmail = user['CORREO'];
+        UserData().userName = user['NOMBRE'];
+        UserData().userEmail = user['CORREO'];
+        UserData().userId = user['ID-CLIENTE'];
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('userName', userName);
-        await prefs.setString('userEmail', userEmail);
-        print(userName);
-        print(userEmail);
+        await prefs.setString('userName', UserData().userName);
+        await prefs.setString('userEmail', UserData().userEmail);
+        await prefs.setInt('userId', UserData().userId);
+        print(UserData().userName);
+        print(UserData().userEmail);
+        print(UserData().userId);
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) =>
-                Home(userName: userName, userEmail: userEmail),
+            builder: (context) => Home(),
           ),
         );
       } else {

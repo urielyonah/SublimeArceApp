@@ -37,7 +37,7 @@ class _PerfilState extends State<Perfil> {
             },
             icon: const Icon(
               Icons.arrow_back,
-              color: Colors.white,
+              color: Colors.black,
             )),
         actions: [
           IconButton(
