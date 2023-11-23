@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ejercicio1/vistas/pedidosView.dart';
 
 import '../home.dart';
 import 'registerView.dart';
