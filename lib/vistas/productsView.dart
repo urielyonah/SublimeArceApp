@@ -44,9 +44,9 @@ class _productsViewState extends State<productsView> {
   }
 
   void cargarProductos() async {
-    //final response = await http.get(Uri.parse('https://apisublimarce.onrender.com/getproductos'));
-    final response =
-        await http.get(Uri.parse('http://localhost:3000/getproductos'));
+    final response = await http
+        .get(Uri.parse('https://apisublimarce.onrender.com/getproductos'));
+    //final response = await http.get(Uri.parse('http://localhost:3000/getproductos'));
 
     if (response.statusCode == 200) {
       final dynamic data = json.decode(response.body);

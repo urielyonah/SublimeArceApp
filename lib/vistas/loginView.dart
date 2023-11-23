@@ -20,9 +20,8 @@ class _loginView extends State<loginView> {
   TextEditingController passwordController = TextEditingController();
 
   Future<void> loginUser() async {
-    final String url = 'http://localhost:3000/login';
-
-    //final String url = 'https://apisublimarce.onrender.com/login';
+    //final String url = 'http://localhost:3000/login';
+    final String url = 'https://apisublimarce.onrender.com/login';
 
     final response = await http.post(
       Uri.parse(url),
@@ -45,9 +44,13 @@ class _loginView extends State<loginView> {
       if (user['CORREO'].toLowerCase() == emailController.text.toLowerCase() &&
           user['CONTRASE\u00d1A'] == passwordController.text) {
         // Datos coinciden, navega a Home
-        UserData().userName = user['NOMBRE'];
-        UserData().userEmail = user['CORREO'];
         UserData().userId = user['ID-CLIENTE'];
+        UserData().userEmail = user['CORREO'];
+        UserData().userPassword = user['CONTRASEÑA'];
+        UserData().userName = user['NOMBRE'];
+        UserData().userPhone = user['TELEFONO'] ?? '';
+        UserData().userDireccion = user['DIRECCION'] ?? '';
+
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('userName', UserData().userName);
         await prefs.setString('userEmail', UserData().userEmail);

@@ -15,9 +15,9 @@ class desingView extends StatefulWidget {
 class _DesingViewState extends State<desingView> {
   List<Camisas> camisas = [];
   void cargarCamisas() async {
-    //final response = await http.get(Uri.parse('https://apisublimarce.onrender.com/getCamisas'));
-    final response =
-        await http.get(Uri.parse('http://localhost:3000/getCamisas'));
+    final response = await http
+        .get(Uri.parse('https://apisublimarce.onrender.com/getCamisas'));
+    //final response = await http.get(Uri.parse('http://localhost:3000/getCamisas'));
     if (response.statusCode == 200) {
       final dynamic data = json.decode(response.body);
 

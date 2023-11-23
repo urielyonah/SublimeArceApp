@@ -10,4 +10,8 @@ class UserData {
   String userName = '';
   String userEmail = '';
   int userId = 0;
+  String userPassword = '';
+  String userPhone = '';
+  String userDireccion = '';
+  String userImage = '';
 }
