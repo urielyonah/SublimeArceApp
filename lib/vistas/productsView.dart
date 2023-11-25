@@ -15,31 +15,6 @@ class _productsViewState extends State<productsView> {
   List<Producto> camisas = [];
   List<Producto> bolsas = [];
   List<Producto> tazas = [];
-<<<<<<< HEAD
-  
-=======
-
-  Producto getProductById(int productId) {
-    for (final producto in camisas) {
-      if (producto.id == productId) {
-        return producto;
-      }
-    }
-
-    for (final producto in tazas) {
-      if (producto.id == productId) {
-        return producto;
-      }
-    }
-
-    for (final producto in bolsas) {
-      if (producto.id == productId) {
-        return producto;
-      }
-    }
-    return Producto(0, 'Producto no encontrado', '', '', 0.0, '');
-  }
->>>>>>> e7ec01b7142dfac6afabb0b0870ce3f184d27947
 
   @override
   void initState() {
