@@ -1,3 +1,4 @@
+import 'package:ejercicio1/bd/UserData.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -18,12 +19,15 @@ class _ListaPedidosViewState extends State<ListaPedidosView> {
 
   void cargarPedidos() async {
     final response = await http.get(Uri.parse(
-        "https://apisublimarce.onrender.com/pedido")); // Reemplaza con la URL correcta de tu API
+        "https://apisublimarce.onrender.com/pedido/${UserData().userId}")); // Reemplaza con la URL correcta de tu API
+    //final response = await http.get(Uri.parse("http://localhost:3000/pedido/${UserData().userId}"));
 
     if (response.statusCode == 200) {
       final dynamic data = json.decode(response.body);
 
-      for (final item in data) {
+      final List<dynamic> pedidosData = [data['user']];
+
+      for (final item in pedidosData) {
         final pedido = Pedido.fromJson(item);
         pedidos.add(pedido);
       }
@@ -78,13 +82,13 @@ class Pedido {
   // Constructor para convertir un mapa a un objeto Pedido
   factory Pedido.fromJson(Map<String, dynamic> json) {
     return Pedido(
-      json['ID-PEDIDOS'],
-      json['ID-CAMISAS BORDADAS'],
-      json['ID-PRODUCTOS'],
-      json['CANTIDAD'],
-      json['PRECIO'].toDouble(),
-      json['STATUS'],
-      json['ID-CLIENTE'],
+      json['ID-PEDIDOS'] as int? ?? 0,
+      json['ID-CAMISAS BORDADAS'] as int? ?? 0,
+      json['ID-PRODUCTOS'] as int? ?? 0,
+      json['CANTIDAD'] as int? ?? 0,
+      json['PRECIO'] as double? ?? 0.0,
+      json['STATUS'] as String? ?? '',
+      json['ID-CLIENTE'] as int? ?? 0,
     );
   }
 }

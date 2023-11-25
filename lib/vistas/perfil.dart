@@ -1,5 +1,7 @@
+import 'package:ejercicio1/bd/UserData.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class Perfil extends StatefulWidget {
   const Perfil({super.key});
@@ -14,6 +16,12 @@ class _PerfilState extends State<Perfil> {
   bool areFieldsEnabled = false;
   String _imagePath = 'assets/perfil-placeholder.jpg';
 
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController direccionController = TextEditingController();
+  TextEditingController telefonoController = TextEditingController();
+
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -23,6 +31,42 @@ class _PerfilState extends State<Perfil> {
         _imagePath = pickedFile.path; // Actualiza la ruta de la imagen.
       });
     }
+  }
+
+  void EditarPerfil() async {
+    final response = await http.put(
+      Uri.parse(
+          "https://apisublimarce.onrender.com/editarPerfil/${UserData().userId}"),
+      body: {
+        'email': emailController.text,
+        'password': passwordController.text,
+        'name': nameController.text,
+        'phone': telefonoController.text,
+        'address': direccionController.text,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Usuario Editado Exitosamente!'),
+        ),
+      );
+    } else {
+      print('Error al editar usuario: ${response.statusCode}');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Inicializa los controladores con los datos del usuario
+    nameController.text = UserData().userName;
+    emailController.text = UserData().userEmail;
+    passwordController.text = UserData().userPassword;
+    direccionController.text = UserData().userDireccion;
+    telefonoController.text = UserData().userPhone;
   }
 
   @override
@@ -37,7 +81,7 @@ class _PerfilState extends State<Perfil> {
             },
             icon: const Icon(
               Icons.arrow_back,
-              color: Colors.white,
+              color: Colors.black,
             )),
         actions: [
           IconButton(
@@ -103,11 +147,11 @@ class _PerfilState extends State<Perfil> {
               const SizedBox(
                 height: 30,
               ),
-              buildTextField("FULL NAME", "", false),
-              buildTextField("EMAIL", "", false),
-              buildTextField("PASSWORD", "", true),
-              buildTextField("DIRECCION", "------", false),
-              buildTextField("TELEFONO", "(52+)", false),
+              buildTextField("FULL NAME", "", false, nameController),
+              buildTextField("EMAIL", "", false, emailController),
+              buildTextField("PASSWORD", "", true, passwordController),
+              buildTextField("DIRECCION", "------", false, direccionController),
+              buildTextField("TELEFONO", "(52+)", false, telefonoController),
               const SizedBox(
                 height: 30,
               ),
@@ -115,7 +159,16 @@ class _PerfilState extends State<Perfil> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      nameController.text = UserData().userName;
+                      emailController.text = UserData().userEmail;
+                      direccionController.text = UserData().userDireccion;
+                      telefonoController.text = UserData().userPhone;
+                      passwordController.text = UserData().userPassword;
+                      setState(() {
+                        areFieldsEnabled = false;
+                      });
+                    },
                     child: const Text("CANCEL",
                         style: TextStyle(
                             fontSize: 15,
@@ -127,7 +180,14 @@ class _PerfilState extends State<Perfil> {
                             borderRadius: BorderRadius.circular(20))),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      EditarPerfil();
+                      UserData().userName = nameController.text;
+                      UserData().userEmail = emailController.text;
+                      UserData().userDireccion = direccionController.text;
+                      UserData().userPhone = telefonoController.text;
+                      UserData().userPassword = passwordController.text;
+                    },
                     child: const Text("SAVE",
                         style: TextStyle(
                             fontSize: 15,
@@ -148,8 +208,8 @@ class _PerfilState extends State<Perfil> {
     );
   }
 
-  Widget buildTextField(
-      String labelText, String placeholder, bool isPasswordTextField) {
+  Widget buildTextField(String labelText, String placeholder,
+      bool isPasswordTextField, TextEditingController controller) {
     return Padding(
         padding: const EdgeInsets.only(bottom: 30),
         child: IgnorePointer(
@@ -157,6 +217,7 @@ class _PerfilState extends State<Perfil> {
           child: Opacity(
             opacity: areFieldsEnabled ? 1.0 : 0.6,
             child: TextField(
+              controller: controller,
               obscureText: isPasswordTextField ? isObscuresPassword : false,
               decoration: InputDecoration(
                   suffixIcon: isPasswordTextField

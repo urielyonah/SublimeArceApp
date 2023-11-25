@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 
 class Routes extends StatelessWidget {
   final int index;
-  const Routes({super.key, required this.index});
+  final int userId;
+
+  const Routes({super.key, required this.index, required this.userId});
 
   @override
   Widget build(BuildContext context) {

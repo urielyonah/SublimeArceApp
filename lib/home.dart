@@ -1,3 +1,4 @@
+import 'package:ejercicio1/bd/UserData.dart';
 import 'package:ejercicio1/vistas/cartView.dart';
 
 import 'drawer.dart';
@@ -6,7 +7,7 @@ import 'routes.dart';
 
 class home extends StatefulWidget {
   final Function currentIndex;
-  const home({Key? key, required this.currentIndex}):super(key: key);
+  const home({Key? key, required this.currentIndex}) : super(key: key);
 
   @override
   State<home> createState() => _homeState();
@@ -39,11 +40,6 @@ class _homeState extends State<home> {
 
 class Home extends StatefulWidget {
   static String tag = "Home";
-  final String userName;
-  final String userEmail;
-
-  const Home({Key? key, required this.userName, required this.userEmail})
-      : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -82,9 +78,10 @@ class _HomeState extends State<Home> {
         backgroundColor:
             Colors.blue, // Personaliza el color de acuerdo a tu empresa
       ),
-      drawer: drawer(userName: widget.userName, userEmail: widget.userEmail),
+      drawer: drawer(
+          userName: UserData().userName, userEmail: UserData().userEmail),
       bottomNavigationBar: myBNB,
-      body: Routes(index: index),
+      body: Routes(index: index, userId: 0),
     );
   }
 }

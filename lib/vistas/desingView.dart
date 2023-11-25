@@ -17,6 +17,10 @@ class _DesingViewState extends State<desingView> {
   void cargarCamisas() async {
     final response = await http
         .get(Uri.parse('https://apisublimarce.onrender.com/getCamisas'));
+<<<<<<< HEAD
+=======
+    //final response = await http.get(Uri.parse('http://localhost:3000/getCamisas'));
+>>>>>>> e7ec01b7142dfac6afabb0b0870ce3f184d27947
     if (response.statusCode == 200) {
       final dynamic data = json.decode(response.body);
 
@@ -388,7 +392,10 @@ class _DetallesCamisasViewState extends State<DetallesCamisasView> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
+<<<<<<< HEAD
                     agregarAServicios();
+=======
+>>>>>>> e7ec01b7142dfac6afabb0b0870ce3f184d27947
                     print(
                         'Agregado al carrito: ${widget.camisa.modelo} x $cantidad, talla: $selectedTalla, color: $selectedColor, servicio: $selectedServicio, area: $selectedAreaServicio');
                   },

@@ -96,6 +96,7 @@ class _registerView extends State<registerView> {
     // Proceed with registration
     final response = await http.post(
       Uri.parse('https://apisublimarce.onrender.com/register'),
+      //Uri.parse('http://localhost:3000/register'),
       body: {
         'email': emailController.text,
         'password': passwordController.text,

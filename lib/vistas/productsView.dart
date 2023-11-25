@@ -6,7 +6,7 @@ import 'package:ejercicio1/bd/producto.dart';
 
 class productsView extends StatefulWidget {
   static String tag = "productsView";
-  
+
   @override
   _productsViewState createState() => _productsViewState();
 }
@@ -15,7 +15,31 @@ class _productsViewState extends State<productsView> {
   List<Producto> camisas = [];
   List<Producto> bolsas = [];
   List<Producto> tazas = [];
+<<<<<<< HEAD
   
+=======
+
+  Producto getProductById(int productId) {
+    for (final producto in camisas) {
+      if (producto.id == productId) {
+        return producto;
+      }
+    }
+
+    for (final producto in tazas) {
+      if (producto.id == productId) {
+        return producto;
+      }
+    }
+
+    for (final producto in bolsas) {
+      if (producto.id == productId) {
+        return producto;
+      }
+    }
+    return Producto(0, 'Producto no encontrado', '', '', 0.0, '');
+  }
+>>>>>>> e7ec01b7142dfac6afabb0b0870ce3f184d27947
 
   @override
   void initState() {
@@ -24,7 +48,9 @@ class _productsViewState extends State<productsView> {
   }
 
   void cargarProductos() async {
-    final response = await http.get(Uri.parse('https://apisublimarce.onrender.com/getproductos'));
+    final response = await http
+        .get(Uri.parse('https://apisublimarce.onrender.com/getproductos'));
+    //final response = await http.get(Uri.parse('http://localhost:3000/getproductos'));
 
     if (response.statusCode == 200) {
       final dynamic data = json.decode(response.body);
@@ -42,15 +68,15 @@ class _productsViewState extends State<productsView> {
       }
       print('------------CAMISAS------------');
       camisas.forEach((producto) {
-       print('ID: ${producto.id}, Categoria: ${producto.categoria}');
+        print('ID: ${producto.id}, Categoria: ${producto.categoria}');
       });
       print('----------------BOLSAS---------------');
       bolsas.forEach((producto) {
-       print('ID: ${producto.id}, Categoria: ${producto.categoria}');
+        print('ID: ${producto.id}, Categoria: ${producto.categoria}');
       });
       print('----------------TAZAS---------------');
       tazas.forEach((producto) {
-       print('ID: ${producto.id}, Categoria: ${producto.categoria}');
+        print('ID: ${producto.id}, Categoria: ${producto.categoria}');
       });
 
       setState(() {
@@ -164,5 +190,3 @@ class _productsViewState extends State<productsView> {
     );
   }
 }
-
-
