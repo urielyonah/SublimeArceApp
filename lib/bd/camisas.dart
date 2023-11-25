@@ -7,7 +7,7 @@ class Camisas {
   final String descripcion;
   final int stock;
   final String imagen;
-  
+
   Camisas( this.id, this.modelo, this.tallas, this.color, this.precio, this.descripcion, this.stock, this.imagen);
 
   Camisas.fromJson(Map<String, dynamic> json)
@@ -19,13 +19,5 @@ class Camisas {
         descripcion = json['DESCRIPCION'] as String,
         stock = json['stock'] as int,
         imagen = json['IMAGEN'] as String;
-  
-}
-
-class CartItem {
-  final Camisas camisa;
-  int cantidad;
-
-  CartItem(this.camisa, this.cantidad);
 }
 

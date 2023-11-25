@@ -12,13 +12,14 @@ class desingView extends StatefulWidget {
   _DesingViewState createState() => _DesingViewState();
 }
 
-class _DesingViewState extends State<desingView>{
+class _DesingViewState extends State<desingView> {
   List<Camisas> camisas = [];
   void cargarCamisas() async {
-    final response = await http.get(Uri.parse('https://apisublimarce.onrender.com/getCamisas'));
+    final response = await http
+        .get(Uri.parse('https://apisublimarce.onrender.com/getCamisas'));
     if (response.statusCode == 200) {
       final dynamic data = json.decode(response.body);
-      
+
       for (final item in data) {
         final camisa = Camisas.fromJson(item);
         camisas.add(camisa);
@@ -77,11 +78,10 @@ class _DesingViewState extends State<desingView>{
               subtitle: Text(camisa.descripcion),
               trailing: Text("Precio: \$${camisa.precio.toStringAsFixed(2)}"),
               onTap: () {
-                // Navegar a la vista de detalles del producto
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>DetallesCamisasView(camisa: camisa),
+                    builder: (context) => DetallesCamisasView(camisa: camisa),
                   ),
                 );
               },
@@ -93,7 +93,7 @@ class _DesingViewState extends State<desingView>{
   }
 }
 
-class DetallesCamisasView extends StatefulWidget{
+class DetallesCamisasView extends StatefulWidget {
   final Camisas camisa;
 
   DetallesCamisasView({required this.camisa});
@@ -102,14 +102,14 @@ class DetallesCamisasView extends StatefulWidget{
 }
 
 class _DetallesCamisasViewState extends State<DetallesCamisasView> {
-
   String selectedTalla = 'S';
   String selectedColor = 'Blanco';
-  int cantidad = 1;
+  String selectedTamano = 'CHICO';
   String selectedServicio = 'Sublimado';
-  String selectedAreaServicio = 'Pecho';
-  String selectedCalidadServicio = "Alta"; // Valor predeterminado
+  String selectedAreaServicio = 'Espalda';
+  String selectedCalidadServicio = 'Alta'; // Valor predeterminado
   String? imageUrl; // Ruta de la imagen cargada
+  int cantidad = 1;
 
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
@@ -118,6 +118,71 @@ class _DetallesCamisasViewState extends State<DetallesCamisasView> {
         imageUrl = pickedFile.path;
       });
     }
+  }
+
+  void agregarAServicios() async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://apisublimarce.onrender.com/postServicios'),
+        body: {
+          'idCamisa': widget.camisa.id.toString(),
+          'tamano': selectedTamano,
+          'servicio': selectedServicio,
+          'area': selectedAreaServicio,
+          'calidad': selectedCalidadServicio,
+          'imagen': imageUrl ?? '',
+          'precio': calcularPrecio().toString(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Agregado a pedidos con éxito!!');
+      } else {
+        print('Error al agregar a pedidos: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error en la solicitud HTTP: $error');
+    }
+  }
+
+  double calcularPrecio() {
+    double precioBase = 0;
+
+    //SERVICIO
+    if (selectedServicio == 'Bordado') {
+      precioBase += 80;
+    } else if (selectedServicio == 'Sublimado') {
+      precioBase += 50;
+    }
+
+    //TAMAÑO
+    if (selectedTamano == 'CHICO') {
+      precioBase += 25;
+    } else if (selectedTamano == 'MEDIANO') {
+      precioBase += 35;
+    } else if (selectedTamano == 'GRANDE') {
+      precioBase += 50;
+    }
+
+    //según el área de servicio
+    if (selectedAreaServicio == 'Espalda') {
+      precioBase += 30;
+    } else if (selectedAreaServicio == 'Pecho') {
+      precioBase += 25;
+    } else if (selectedAreaServicio == 'Manga') {
+      precioBase += 20;
+    }
+
+    //CALIDAD
+    if (selectedCalidadServicio == 'Normal') {
+      precioBase += 50;
+    } else if (selectedCalidadServicio == 'Alta') {
+      precioBase += 80;
+    } else if (selectedCalidadServicio == 'Sencilla') {
+      precioBase += 30;
+    }
+
+    return precioBase * cantidad;
   }
 
   @override
@@ -143,7 +208,7 @@ class _DetallesCamisasViewState extends State<DetallesCamisasView> {
               SizedBox(height: 16),
               Text("Descripción: ${widget.camisa.descripcion}"),
               SizedBox(height: 16),
-              Text("Precio: ${widget.camisa.precio}"),
+              Text("Precio de la camisa: ${widget.camisa.precio}"),
               SizedBox(height: 16),
               Row(
                 children: [
@@ -155,8 +220,12 @@ class _DetallesCamisasViewState extends State<DetallesCamisasView> {
                         selectedTalla = newValue!;
                       });
                     },
-                    items: <String>['S', 'M', 'L', 'XL']
-                        .map<DropdownMenuItem<String>>((String value) {
+                    items: <String>[
+                      'S',
+                      'M',
+                      'L',
+                      'XL',
+                    ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -172,8 +241,12 @@ class _DetallesCamisasViewState extends State<DetallesCamisasView> {
                         selectedColor = newValue!;
                       });
                     },
-                    items: <String>['Blanco', 'Negro', 'Azul', 'Rojo']
-                        .map<DropdownMenuItem<String>>((String value) {
+                    items: <String>[
+                      'Blanco',
+                      'Negro',
+                      'Azul',
+                      'Rojo',
+                    ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -189,8 +262,10 @@ class _DetallesCamisasViewState extends State<DetallesCamisasView> {
                         selectedServicio = newValue!;
                       });
                     },
-                    items: <String>['Sublimado', 'Bordado']
-                        .map<DropdownMenuItem<String>>((String value) {
+                    items: <String>[
+                      'Sublimado',
+                      'Bordado',
+                    ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -211,8 +286,8 @@ class _DetallesCamisasViewState extends State<DetallesCamisasView> {
                   },
                   items: <String>[
                     'Pecho',
-                    'manga',
-                    'espalda',
+                    'Manga',
+                    'Espalda',
                   ].map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -241,6 +316,33 @@ class _DetallesCamisasViewState extends State<DetallesCamisasView> {
                   }).toList(),
                 ),
               ]),
+              SizedBox(height: 16),
+              Row(
+                children: [
+                  Text("Tamaño: "),
+                  DropdownButton<String>(
+                    value: selectedTamano,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedTamano = newValue!;
+                      });
+                    },
+                    items: <String>[
+                      'CHICO',
+                      'MEDIANO',
+                      'GRANDE',
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Text(
+                  "Precio del servicio: \$${calcularPrecio().toStringAsFixed(2)}"),
               SizedBox(height: 16),
               Text("Cantidad:"),
               Row(
@@ -271,7 +373,8 @@ class _DetallesCamisasViewState extends State<DetallesCamisasView> {
               Text("Cargar imagen:"),
               ElevatedButton(
                 onPressed: () {
-                  _pickImage(ImageSource.gallery); // Debes reemplazar 'ruta_de_la_imagen' con la ruta real
+                  _pickImage(ImageSource
+                      .gallery); // Debes reemplazar 'ruta_de_la_imagen' con la ruta real
                 },
                 child: Text("Cargar imagen"),
               ),
@@ -285,7 +388,9 @@ class _DetallesCamisasViewState extends State<DetallesCamisasView> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    print('Agregado al carrito: ${widget.camisa.modelo} x $cantidad, talla: $selectedTalla, color: $selectedColor, servicio: $selectedServicio, area: $selectedAreaServicio');
+                    agregarAServicios();
+                    print(
+                        'Agregado al carrito: ${widget.camisa.modelo} x $cantidad, talla: $selectedTalla, color: $selectedColor, servicio: $selectedServicio, area: $selectedAreaServicio');
                   },
                   child: Text("Agregar al carrito"),
                 ),
