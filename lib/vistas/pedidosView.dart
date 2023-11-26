@@ -18,9 +18,7 @@ class _ListaPedidosViewState extends State<ListaPedidosView> {
   }
 
   void cargarPedidos() async {
-    final response = await http.get(Uri.parse(
-        "https://apisublimarce.onrender.com/pedido/${UserData().userId}")); // Reemplaza con la URL correcta de tu API
-    //final response = await http.get(Uri.parse("http://localhost:3000/pedido/${UserData().userId}"));
+    final response = await http.get(Uri.parse("https://apisublimarce.onrender.com/pedido/${UserData().userId}")); 
 
     if (response.statusCode == 200) {
       final dynamic data = json.decode(response.body);
@@ -69,21 +67,21 @@ class _ListaPedidosViewState extends State<ListaPedidosView> {
 
 class Pedido {
   final int id;
-  final int idCamisasBordadas;
+  final int idCamisasServicios;
   final int idProductos;
   final int cantidad;
   final double precio;
   final String status;
   final int idCliente;
 
-  Pedido(this.id, this.idCamisasBordadas, this.idProductos, this.cantidad,
+  Pedido(this.id, this.idCamisasServicios, this.idProductos, this.cantidad,
       this.precio, this.status, this.idCliente);
 
   // Constructor para convertir un mapa a un objeto Pedido
   factory Pedido.fromJson(Map<String, dynamic> json) {
     return Pedido(
       json['ID-PEDIDOS'] as int? ?? 0,
-      json['ID-CAMISAS BORDADAS'] as int? ?? 0,
+      json['ID-CAMISAS-SERVICIOS'] as int? ?? 0,
       json['ID-PRODUCTOS'] as int? ?? 0,
       json['CANTIDAD'] as int? ?? 0,
       json['PRECIO'] as double? ?? 0.0,

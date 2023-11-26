@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:ejercicio1/vistas/cartView.dart';
+import 'package:ejercicio1/bd/UserData.dart';
 
 class Producto extends StatefulWidget {
   final int id;
@@ -60,9 +63,34 @@ class _ProductoState extends State<Producto> {
       });
     }
   }
-  void agregarAlCarrito(Producto producto) {
+  void agregarAlCarrito(Producto producto) async{
   // Agrega el producto al carrito
-  // ...
+   //final url = ''; // Reemplaza con la URL de tu backend
+
+    // Crea un mapa con la información del producto y la cantidad
+    final Map<String, dynamic> data = {
+      'idproducto': producto.id.toString(),
+      'cantidad': cantidad.toString(),
+      'precio': producto.precio.toString(),
+      'idcliente': UserData().userId.toString(),
+      // ... (otros campos según sea necesario)
+    };
+    //print(data);
+    // Realiza la solicitud HTTP
+    try {
+    final response = await http.post(
+      Uri.parse('https://apisublimarce.onrender.com/insertarproductoapedidos'),
+      body: data,
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      print('Pedido agregado con éxito');
+    } else {
+      print('Error al agregar el pedido: ${response.reasonPhrase}');
+    }
+  } catch (error) {
+    print('Error al realizar la solicitud HTTP: $error');
+  }
 
   // Navega a la vista de cartView.dart
   Navigator.push(

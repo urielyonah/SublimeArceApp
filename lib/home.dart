@@ -78,8 +78,7 @@ class _HomeState extends State<Home> {
         backgroundColor:
             Colors.blue, // Personaliza el color de acuerdo a tu empresa
       ),
-      drawer: drawer(
-          userName: UserData().userName, userEmail: UserData().userEmail),
+      drawer: drawer(userName: UserData().userName, userEmail: UserData().userEmail),
       bottomNavigationBar: myBNB,
       body: Routes(index: index, userId: 0),
     );

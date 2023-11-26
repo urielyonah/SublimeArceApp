@@ -12,8 +12,7 @@ class CartView extends StatefulWidget {
 }
 
 class _CartViewState extends State<CartView> {
-  List<CartItem> carrito =
-      []; // Descomenta esta línea para inicializar la lista de carrito
+  List<CartItem> carrito = []; // Descomenta esta línea para inicializar la lista de carrito
 
   @override
   Widget build(BuildContext context) {
