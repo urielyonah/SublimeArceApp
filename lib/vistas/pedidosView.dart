@@ -18,19 +18,28 @@ class _ListaPedidosViewState extends State<ListaPedidosView> {
   }
 
   void cargarPedidos() async {
+<<<<<<< HEAD
     final response = await http.get(Uri.parse('https://apisublimarce.onrender.com/pedido/${UserData().userId}')); 
+=======
+    final response = await http.get(Uri.parse(
+        "https://apisublimarce.onrender.com/pedido/${UserData().userId}"));
+>>>>>>> 32a8cca96ccd97283008b8fd24702880e46b2cba
 
     if (response.statusCode == 200) {
       final dynamic data = json.decode(response.body);
 
-      final List<dynamic> pedidosData = [data['user']];
+      if (data['pedidos'] != null) {
+        final List<dynamic> pedidosData = List.from(data['pedidos']);
 
-      for (final item in pedidosData) {
-        final pedido = Pedido.fromJson(item);
-        pedidos.add(pedido);
+        for (final item in pedidosData) {
+          final pedido = Pedido.fromJson(item);
+          pedidos.add(pedido);
+        }
+
+        setState(() {});
+      } else {
+        print('La lista de pedidos es nula.');
       }
-
-      setState(() {});
     } else {
       print('Error al cargar los pedidos: ${response.statusCode}');
     }
@@ -68,25 +77,61 @@ class _ListaPedidosViewState extends State<ListaPedidosView> {
 class Pedido {
   final int id;
   final int idCamisasServicios;
-  final int idProductos;
+
   final int cantidad;
   final double precio;
   final String status;
   final int idCliente;
+  final String modelo;
+  final String talla;
+  final String color;
+  final String descripcion;
+  final int stock;
+  final String imagen;
+  final String tipoServicio;
+  final String size;
+  final String calidad;
+  final String area;
+  final String nombreProductos;
 
-  Pedido(this.id, this.idCamisasServicios, this.idProductos, this.cantidad,
-      this.precio, this.status, this.idCliente);
+  Pedido(
+      this.id,
+      this.idCamisasServicios,
+      this.cantidad,
+      this.precio,
+      this.status,
+      this.idCliente,
+      this.modelo,
+      this.talla,
+      this.color,
+      this.descripcion,
+      this.stock,
+      this.imagen,
+      this.tipoServicio,
+      this.size,
+      this.calidad,
+      this.area,
+      this.nombreProductos);
 
-  // Constructor para convertir un mapa a un objeto Pedido
   factory Pedido.fromJson(Map<String, dynamic> json) {
     return Pedido(
       json['ID-PEDIDOS'] as int? ?? 0,
       json['ID-CAMISAS-SERVICIOS'] as int? ?? 0,
-      json['ID-PRODUCTOS'] as int? ?? 0,
       json['CANTIDAD'] as int? ?? 0,
-      json['PRECIO'] as double? ?? 0.0,
+      json['PRECIO'] != null ? json['PRECIO']!.toDouble() : 0.0,
       json['STATUS'] as String? ?? '',
       json['ID-CLIENTE'] as int? ?? 0,
+      json['MODELO'] as String? ?? '',
+      json['TALLAS'] as String? ?? '',
+      json['COLOR'] as String? ?? '',
+      json['DESCRIPCION'] as String? ?? '',
+      json['stock'] as int? ?? 0,
+      json['IMAGEN'] as String? ?? '',
+      json['TIPO-SERVICIO'] as String? ?? '',
+      json['tamaño'] as String? ?? '',
+      json['calidad'] as String? ?? '',
+      json['AREA'] as String? ?? '',
+      json['NOMBRE-PRODUCTOS'] as String? ?? '',
     );
   }
 }
@@ -109,10 +154,39 @@ class DetallesPedidoView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Número de Pedido: ${pedido.id}'),
+            SizedBox(height: 8),
             Text('Cantidad: ${pedido.cantidad}'),
-            Text('Precio: \$${pedido.precio.toStringAsFixed(2)}'),
+            SizedBox(height: 8),
             Text('Estado: ${pedido.status}'),
-            // Agrega más detalles según sea necesario
+            SizedBox(height: 16),
+
+            // Mostrar detalles específicos para productos
+
+            Text('Nombre de Productos: ${pedido.nombreProductos}'),
+            // Agrega más detalles específicos para productos aquí si es necesario
+
+            // Mostrar detalles específicos para camisas/servicios
+            if (pedido.idCamisasServicios != null) ...[
+              Text('ID de Camisas/Servicios: ${pedido.idCamisasServicios}'),
+              Text('Modelo: ${pedido.modelo}'),
+              Text('Talla: ${pedido.talla}'),
+              Text('Color: ${pedido.color}'),
+              Text('Descripción: ${pedido.descripcion}'),
+              Text('Stock: ${pedido.stock}'),
+              Text('Tipo de Servicio: ${pedido.tipoServicio}'),
+              Text('Tamaño: ${pedido.size}'),
+              Text('Calidad: ${pedido.calidad}'),
+              Text('Área: ${pedido.area}'),
+
+              // Agrega más detalles específicos para camisas/servicios aquí si es necesario
+            ],
+
+            SizedBox(height: 16),
+
+            // Precio total
+            Text('Precio Total: \$${pedido.precio.toStringAsFixed(2)}'),
+
+            // Agrega más detalles aquí si es necesario
           ],
         ),
       ),
