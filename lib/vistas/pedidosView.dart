@@ -18,7 +18,7 @@ class _ListaPedidosViewState extends State<ListaPedidosView> {
   }
 
   void cargarPedidos() async {
-    final response = await http.get(Uri.parse("https://apisublimarce.onrender.com/pedido/${UserData().userId}")); 
+    final response = await http.get(Uri.parse('https://apisublimarce.onrender.com/pedido/${UserData().userId}')); 
 
     if (response.statusCode == 200) {
       final dynamic data = json.decode(response.body);
