@@ -155,13 +155,7 @@ class DetallesPedidoView extends StatelessWidget {
             SizedBox(height: 8),
             Text('Estado: ${pedido.status}'),
             SizedBox(height: 16),
-
-            // Mostrar detalles específicos para productos
-
             Text('Nombre de Productos: ${pedido.nombreProductos}'),
-            // Agrega más detalles específicos para productos aquí si es necesario
-
-            // Mostrar detalles específicos para camisas/servicios
             if (pedido.idCamisasServicios != null) ...[
               Text('ID de Camisas/Servicios: ${pedido.idCamisasServicios}'),
               Text('Modelo: ${pedido.modelo}'),

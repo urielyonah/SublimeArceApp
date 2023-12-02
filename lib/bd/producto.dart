@@ -63,9 +63,10 @@ class _ProductoState extends State<Producto> {
       });
     }
   }
-  void agregarAlCarrito(Producto producto) async{
-  // Agrega el producto al carrito
-   //final url = ''; // Reemplaza con la URL de tu backend
+
+  void agregarAlCarrito(Producto producto) async {
+    // Agrega el producto al carrito
+    //final url = ''; // Reemplaza con la URL de tu backend
 
     // Crea un mapa con la información del producto y la cantidad
     final Map<String, dynamic> data = {
@@ -78,29 +79,29 @@ class _ProductoState extends State<Producto> {
     //print(data);
     // Realiza la solicitud HTTP
     try {
-    final response = await http.post(
-      Uri.parse('https://apisublimarce.onrender.com/insertarproductoapedidos'),
-      body: data,
-    );
-    print(response.body);
-    if (response.statusCode == 200) {
-      print('Pedido agregado con éxito');
-    } else {
-      print('Error al agregar el pedido: ${response.reasonPhrase}');
+      final response = await http.post(
+        Uri.parse(
+            'https://apisublimarce.onrender.com/insertarproductoapedidos'),
+        body: data,
+      );
+      print(response.body);
+      if (response.statusCode == 200) {
+        print('Pedido agregado con éxito');
+      } else {
+        print('Error al agregar el pedido: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error al realizar la solicitud HTTP: $error');
     }
-  } catch (error) {
-    print('Error al realizar la solicitud HTTP: $error');
+
+    // Navega a la vista de cartView.dart
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CartView(),
+      ),
+    );
   }
-
-  // Navega a la vista de cartView.dart
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => CartView(productos: [producto]),
-    ),
-  );
-}
-
 
   @override
   Widget build(BuildContext context) {
