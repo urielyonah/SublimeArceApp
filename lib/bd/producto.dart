@@ -11,9 +11,10 @@ class Producto extends StatefulWidget {
   final String imagen;
   final String descripcion;
   final String categoria;
+  final int stock;
 
   Producto(this.id, this.nombre, this.imagen, this.descripcion, this.precio,
-      this.categoria);
+      this.categoria, this.stock);
 
   factory Producto.fromJson(Map<String, dynamic> json) {
     if (json['ID-PRODUCTOS'] == null ||
@@ -21,10 +22,11 @@ class Producto extends StatefulWidget {
         json['IMAGEN'] == null ||
         json['DESCRIPCION'] == null ||
         json['PRECIO'] == null ||
-        json['CATEGORIA'] == null) {
+        json['CATEGORIA'] == null ||
+        json['stock'] == null) {
       // Maneja el caso en el que uno o más campos sean nulos, por ejemplo, asignando valores predeterminados o lanzando una excepción.
       return Producto(0, 'Nombre no disponible', 'imagen_no_disponible.jpg',
-          'Descripción no disponible', 0.00, 'Categoria no disponible');
+          'Descripción no disponible', 0.00, 'Categoria no disponible', 0);
     } else {
       return Producto(
         json['ID-PRODUCTOS'] as int,
@@ -33,6 +35,7 @@ class Producto extends StatefulWidget {
         json['DESCRIPCION'] as String,
         json['PRECIO'] as double,
         json['CATEGORIA'] as String,
+        json['stock'] as int,
       );
     }
   }
@@ -52,7 +55,9 @@ class _ProductoState extends State<Producto> {
   int cantidad = 1;
   void incrementarCantidad() {
     setState(() {
-      cantidad++;
+      if (cantidad < widget.stock) {
+        cantidad++;
+      }
     });
   }
 
@@ -74,6 +79,7 @@ class _ProductoState extends State<Producto> {
       'cantidad': cantidad.toString(),
       'precio': producto.precio.toString(),
       'idcliente': UserData().userId.toString(),
+
       // ... (otros campos según sea necesario)
     };
     //print(data);

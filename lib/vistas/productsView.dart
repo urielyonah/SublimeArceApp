@@ -121,13 +121,13 @@ class _productsViewState extends State<productsView> {
               child: Column(
                 children: camisas
                     .map((product) => Producto(
-                          product.id,
-                          product.nombre,
-                          product.imagen,
-                          product.descripcion,
-                          product.precio.toDouble(),
-                          product.categoria,
-                        ))
+                        product.id,
+                        product.nombre,
+                        product.imagen,
+                        product.descripcion,
+                        product.precio.toDouble(),
+                        product.categoria,
+                        product.stock))
                     .toList(),
               ),
             ),
@@ -135,13 +135,13 @@ class _productsViewState extends State<productsView> {
               child: Column(
                 children: tazas
                     .map((product) => Producto(
-                          product.id,
-                          product.nombre,
-                          product.imagen,
-                          product.descripcion,
-                          product.precio.toDouble(),
-                          product.categoria,
-                        ))
+                        product.id,
+                        product.nombre,
+                        product.imagen,
+                        product.descripcion,
+                        product.precio.toDouble(),
+                        product.categoria,
+                        product.stock))
                     .toList(),
               ),
             ),
@@ -149,13 +149,13 @@ class _productsViewState extends State<productsView> {
               child: Column(
                 children: bolsas
                     .map((product) => Producto(
-                          product.id,
-                          product.nombre,
-                          product.imagen,
-                          product.descripcion,
-                          product.precio.toDouble(),
-                          product.categoria,
-                        ))
+                        product.id,
+                        product.nombre,
+                        product.imagen,
+                        product.descripcion,
+                        product.precio.toDouble(),
+                        product.categoria,
+                        product.stock))
                     .toList(),
               ),
             ),
