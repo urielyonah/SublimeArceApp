@@ -77,7 +77,7 @@ class _ProductoState extends State<Producto> {
     final Map<String, dynamic> data = {
       'idproducto': producto.id.toString(),
       'cantidad': cantidad.toString(),
-      'precio': producto.precio.toString(),
+      'precio': (producto.precio * cantidad).toString(),
       'idcliente': UserData().userId.toString(),
 
       // ... (otros campos según sea necesario)

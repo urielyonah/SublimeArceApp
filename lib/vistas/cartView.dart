@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ejercicio1/bd/UserData.dart';
 import 'dart:convert';
+import 'package:ejercicio1/bd/pdf.dart'; // Asegúrate de proporcionar la ruta correcta
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 class CartView extends StatefulWidget {
   @override
@@ -53,6 +56,28 @@ class _CartViewState extends State<CartView> {
     } else {
       print(
           'Error al cambiar el estado de los pedidos: ${response.statusCode}');
+    }
+  }
+
+  void eliminarPedido(int index) async {
+    // Obtén el ID del pedido que deseas eliminar
+    int pedidoId = carritos[index].id;
+
+    // Realiza la petición HTTP para eliminar el pedido
+    final response = await http.delete(
+      Uri.parse('https://apisublimarce.onrender.com/deleteCarrito/$pedidoId'),
+    );
+
+    if (response.statusCode == 200) {
+      // Elimina el pedido de la lista local
+      setState(() {
+        carritos.removeAt(index);
+        cantidades.removeAt(index);
+      });
+
+      print('Pedido eliminado con éxito');
+    } else {
+      print('Error al eliminar el pedido: ${response.statusCode}');
     }
   }
 
@@ -149,9 +174,7 @@ class _CartViewState extends State<CartView> {
                             IconButton(
                               icon: Icon(Icons.delete),
                               onPressed: () {
-                                // Coloca aquí la lógica para eliminar el elemento
-                                // por ejemplo, puedes mostrar un cuadro de diálogo de confirmación
-                                // y luego eliminar el elemento del carrito
+                                eliminarPedido(index);
                               },
                             ),
                           ],
@@ -177,6 +200,7 @@ class _CartViewState extends State<CartView> {
 
                     // Llama a la función cambiarEstadoPedido con la lista de IDs
                     cambiarEstadoPedido(pedidoIds);
+                    generarPDF(carritos);
                   },
                   child: Text('Realizar Pedido'),
                 ),
@@ -264,57 +288,5 @@ class Carrito {
         json['CATEGORIA-PRODUCTOS'] as String? ?? '',
         json['STOCK-PRODUCTOS'] as int? ?? 0,
         json['IMAGEN-PRODUCTOS'] as String? ?? '');
-  }
-}
-
-class DetallesCarritoView extends StatelessWidget {
-  final Carrito carrito;
-
-  DetallesCarritoView({required this.carrito});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Detalles del Pedido'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Número de Pedido: ${carrito.id}'),
-            SizedBox(height: 8),
-            Text('Cantidad: ${carrito.cantidad}'),
-            SizedBox(height: 8),
-            Text('Estado: ${carrito.status}'),
-            SizedBox(height: 16),
-            Text('Nombre de Productos: ${carrito.nombreProductos}'),
-            if (carrito.idCamisasServicios != null) ...[
-              Text('ID de Camisas/Servicios: ${carrito.idCamisasServicios}'),
-              Text('Modelo: ${carrito.modelo}'),
-              Text('Talla: ${carrito.talla}'),
-              Text('Color: ${carrito.color}'),
-              Text('Descripción: ${carrito.descripcion}'),
-              Text('Stock: ${carrito.stock}'),
-              Text('Tipo de Servicio: ${carrito.tipoServicio}'),
-              Text('Tamaño: ${carrito.size}'),
-              Text('Calidad: ${carrito.calidad}'),
-              Text('Área: ${carrito.area}'),
-
-              // Agrega más detalles específicos para camisas/servicios aquí si es necesario
-            ],
-
-            SizedBox(height: 16),
-
-            // Precio total
-            Text('Precio Total: \$${carrito.precio.toStringAsFixed(2)}'),
-
-            // Agrega más detalles aquí si es necesario
-          ],
-        ),
-      ),
-    );
   }
 }

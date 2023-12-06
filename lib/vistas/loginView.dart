@@ -33,7 +33,6 @@ class _loginView extends State<loginView> {
 
     if (response.statusCode == 200) {
       final dynamic data = jsonDecode(response.body);
-      //print(response.body);
       final user = data['user'];
       // Imprime las credenciales ingresadas y los valores del servidor
       print(
