@@ -16,8 +16,8 @@ class loginView extends StatefulWidget {
 
 class _loginView extends State<loginView> {
   bool showPassword = false;
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController(text: "verdin@gamil.com");
+  TextEditingController passwordController = TextEditingController(text: "12345");
 
   Future<void> loginUser() async {
     //final String url = 'http://localhost:3000/login';
